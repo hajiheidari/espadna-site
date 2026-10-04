@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Pantomime Party | Charades game in your browser</title>
+  <meta name="description" content="Pantomime Party: the charades game for friends and family. 800+ words, team play and heads-up style forehead mode. No install, works offline.">
+  <meta name="keywords" content="charades, charades game, heads up game, party game, pantomime, guess the word, family game, online charades">
+  <meta name="theme-color" content="#1A0F3D">
+  <link rel="canonical" href="https://espadna.com/pantomime-app/">
+  <link rel="alternate" hreflang="en" href="https://espadna.com/pantomime-app/">
+  <link rel="alternate" hreflang="fa" href="https://espadna.com/pantomime-app/fa/">
+  <link rel="alternate" hreflang="ar" href="https://espadna.com/pantomime-app/ar/">
+  <link rel="alternate" hreflang="x-default" href="https://espadna.com/pantomime-app/">
+  <link rel="icon" type="image/png" href="/pantomime-app/favicon.png">
+  <link rel="apple-touch-icon" href="/pantomime-app/icon.png">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:site_name" content="Pantomime Party">
+  <meta property="og:title" content="Pantomime Party 🎭 Act it out, laugh out loud!">
+  <meta property="og:description" content="The charades game for parties. Play right now in your browser, no install.">
+  <meta property="og:url" content="https://espadna.com/pantomime-app/">
+  <meta property="og:image" content="https://espadna.com/pantomime-app/og_en.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Pantomime Party 🎭">
+  <meta name="twitter:description" content="The charades game for parties. No install, in your browser.">
+  <meta name="twitter:image" content="https://espadna.com/pantomime-app/og_en.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Pantomime Party",
+    "description": "Charades party game",
+    "inLanguage": ["en", "fa"],
+    "genre": ["Party game", "Charades"],
+    "gamePlatform": ["Web browser", "Android", "iOS"],
+    "url": "https://espadna.com/pantomime-app/",
+    "image": "https://espadna.com/pantomime-app/og_en.png",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
+  <style>
+    @font-face { font-family: Vazirmatn; font-weight: 700 900; font-display: swap; src: url(/Vazirmatn-Bold.ttf) format("truetype"); }
+    :root {
+      --bg: #1A0F3D; --bg2: #2A1B5C; --card: #FFF7E6; --ink: #120A2B;
+      --yellow: #FFD23F; --pink: #FF5C9A; --green: #3DDC84; --blue: #3BCEF5; --muted: #C9BFF2;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; background: var(--bg); }
+    body {
+      margin: 0; min-height: 100vh; color: #fff; line-height: 1.8;
+      font-family: Vazirmatn, Tahoma, "Segoe UI", sans-serif;
+      background: var(--bg) radial-gradient(ellipse 120% 900px at 50% 0%, #5A36C9 0, var(--bg2) 50%, var(--bg) 100%) no-repeat;
+    }
+    main { max-width: 720px; margin: 0 auto; padding: 24px 16px 48px; }
+    .hero { text-align: center; padding: 24px 0 8px; }
+    .hero img { width: 132px; height: 132px; border-radius: 30px; box-shadow: 0 8px 0 var(--ink); animation: bob 2.4s ease-in-out infinite; }
+    h1 { margin: 20px 0 0; font-size: clamp(40px, 11vw, 64px); font-weight: 900; color: var(--yellow); line-height: 1.3; text-shadow: 0 5px 0 var(--ink); }
+    .tag { margin: 4px 0 28px; font-size: 20px; color: var(--muted); font-weight: 700; }
+    .play {
+      display: block; max-width: 420px; margin: 0 auto; padding: 18px 24px;
+      background: var(--green); color: var(--ink); text-decoration: none; text-align: center;
+      font-size: 30px; font-weight: 900; border: 4px solid var(--ink); border-radius: 999px;
+      box-shadow: 0 8px 0 var(--ink); transition: transform .1s, box-shadow .1s;
+    }
+    .play:active { transform: translateY(6px); box-shadow: 0 2px 0 var(--ink); }
+    .play small { display: block; font-size: 15px; font-weight: 700; opacity: .75; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin: 40px 0; }
+    .feat { background: var(--card); color: var(--ink); border: 3px solid var(--ink); border-radius: 22px; padding: 16px; text-align: center; box-shadow: 0 6px 0 var(--ink); }
+    .feat b { display: block; font-size: 34px; line-height: 1.3; }
+    .feat span { font-weight: 800; font-size: 16px; }
+    h2 { color: var(--yellow); font-size: 26px; margin: 40px 0 12px; }
+    .card { background: rgba(255,255,255,.07); border: 2px solid rgba(255,255,255,.12); border-radius: 22px; padding: 6px 20px; }
+    ol { padding-inline-start: 26px; margin: 12px 0;  } li { margin: 6px 0; }
+    details { border-bottom: 1px solid rgba(255,255,255,.12); padding: 10px 0; }
+    details:last-child { border-bottom: 0; }
+    summary { cursor: pointer; font-weight: 800; }
+    #install { display: none; margin: 18px auto 0; background: var(--yellow); color: var(--ink); border: 3px solid var(--ink); border-radius: 999px; padding: 10px 22px; font: inherit; font-weight: 900; font-size: 18px; box-shadow: 0 5px 0 var(--ink); cursor: pointer; }
+    .stores { display: none; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+    .stores a { color: var(--ink); background: #fff; border: 3px solid var(--ink); border-radius: 14px; padding: 8px 16px; font-weight: 900; text-decoration: none; }
+    .lang { text-align: end; } .lang a { color: var(--muted); font-weight: 800; text-decoration: none; border: 2px solid rgba(255,255,255,.2); border-radius: 999px; padding: 2px 14px; }
+    footer { text-align: center; color: var(--muted); font-size: 14px; margin-top: 48px; }
+    footer a { color: var(--muted); }
+    @keyframes bob { 50% { transform: translateY(-8px) rotate(-3deg); } }
+    @media (prefers-reduced-motion: reduce) { .hero img { animation: none; } }
+  </style>
+</head>
+<body>
+<main>
+  <nav class="lang"><a href="/pantomime-app/fa/" hreflang="fa" lang="fa">فارسی</a> <a href="/pantomime-app/ar/" hreflang="ar" lang="ar">العربية</a></nav>
+  <section class="hero">
+    <img src="/pantomime-app/icon.png" alt="Pantomime Party logo" width="132" height="132">
+    <h1>Pantomime Party</h1>
+    <p class="tag">Act it out, laugh out loud! 🎭</p>
+    <a class="play" href="https://pantomime.espadna.com/?lang=en">▶️ Play now<small>No install, right here in your browser</small></a>
+    <div class="stores" id="stores"><!-- store links, shown when published --></div>
+  </section>
+
+  <section class="grid" aria-label="Features">
+    <div class="feat"><b>📚</b><span>800+ words in 11 categories</span></div>
+    <div class="feat"><b>👥</b><span>Team play, 2–4 teams</span></div>
+    <div class="feat"><b>🤳</b><span>Phone-on-forehead mode</span></div>
+    <div class="feat"><b>📴</b><span>Works offline after the first visit</span></div>
+  </section>
+
+  <h2>How to play</h2>
+  <div class="card">
+    <ol>
+      <li>Make teams and pick how long each turn lasts.</li>
+      <li>One player sees the word and acts it out <b>without speaking</b>.</li>
+      <li>Teammates guess: correct ✅ or pass ⏭️.</li>
+      <li>In forehead mode, hold the phone on your forehead: tilt down for correct, up to pass.</li>
+    </ol>
+  </div>
+
+  <h2>Add to your home screen</h2>
+  <div class="card">
+    <details>
+      <summary>iPhone (Safari)</summary>
+      <p>Tap the share button <b>⬆️</b> and choose “Add to Home Screen”. For forehead mode, allow “Motion &amp; Orientation” the first time.</p>
+    </details>
+    <details>
+      <summary>Android (Chrome)</summary>
+      <p>Open the <b>⋮</b> menu and choose “Install app” or “Add to Home screen”.</p>
+    </details>
+    <details>
+      <summary>Does it work offline?</summary>
+      <p>Yes. Open the game once; after that it runs without internet. The word list updates by itself whenever you are online.</p>
+    </details>
+  </div>
+
+  <footer>
+    <a href="/">Espadna</a> · <a href="/pantomime-app/privacy">Privacy</a> · Made with ❤️ for game nights
+  </footer>
+</main>
+</body>
+</html>

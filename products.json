@@ -1,0 +1,31 @@
+{
+  "_comment": "Products shown on espadna.com. Run `python3 tools/site_home.py` after editing.",
+  "products": [
+    {
+      "id": "pantomime",
+      "icon": "/pantomime-app/icon.png",
+      "kind": {"fa": "بازی", "en": "Game", "ar": "لعبة"},
+      "name": {"fa": "پانتومیم دورهمی", "en": "Pantomime Party", "ar": "بانتومايم الحفلات"},
+      "desc": {
+        "fa": "بازی ادا و حدس کلمه برای دورهمی‌ها؛ تیمی یا با گوشی روی پیشانی. فارسی و انگلیسی، بدون نیاز به اینترنت.",
+        "en": "The charades party game: play in teams or with the phone on your forehead. English and Persian, works offline.",
+        "ar": "لعبة التمثيل الصامت وتخمين الكلمات للتجمعات، ضمن فرق أو مع وضع الهاتف على الجبين. بالإنجليزية والفارسية، تعمل دون إنترنت."
+      },
+      "page": {"fa": "/pantomime-app/fa/", "en": "/pantomime-app/", "ar": "/pantomime-app/ar/"},
+      "web": {"fa": "https://pantomime.espadna.com/?lang=fa", "en": "https://pantomime.espadna.com/?lang=en", "ar": "https://pantomime.espadna.com/?lang=en"}
+    },
+    {
+      "id": "tiaro",
+      "icon": "/tiaro-app/icon.png",
+      "kind": {"fa": "بازی", "en": "Game", "ar": "لعبة"},
+      "name": {"fa": "تیارو", "en": "Tiaro", "ar": "تيارو"},
+      "desc": {
+        "fa": "پازل منطقی روزانه: در هر ردیف، ستون و ناحیه‌ی رنگی یک تاج بگذار. هر روز یک پازل تازه، با راهنمایی که یاد می‌دهد.",
+        "en": "The daily logic puzzle: place one crown in every row, column and color region. A fresh puzzle every day, with hints that teach.",
+        "ar": "لغز منطقي يومي: ضع تاجًا واحدًا في كل صف وعمود ومنطقة ملوّنة. لغز جديد كل يوم مع تلميحات تعلّمك الحل."
+      },
+      "page": {"fa": "/tiaro-app/fa/", "en": "/tiaro-app/", "ar": "/tiaro-app/ar/"},
+      "web": {"fa": "https://tiaro.espadna.com/?lang=fa", "en": "https://tiaro.espadna.com/?lang=en", "ar": "https://tiaro.espadna.com/?lang=en"}
+    }
+  ]
+}
