@@ -1,0 +1,282 @@
+<?php
+/**
+ * Espadna Iranian mirror: keeps copies of the espadna.com sites on an
+ * Iranian host so they keep working on Iran's national internet.
+ *
+ * Run by cron (no SSH needed), e.g. every minute:
+ *     php /home/USER/espadna-sync/sync.php
+ * Settings: config.php next to this file (see config.sample.php).
+ *
+ * For every site in config.php:
+ *   - type "files": downloads <source>/files.json (path + sha256 of every
+ *     file), fetches only the files that changed, verifies each hash, writes
+ *     it in place (atomic rename), removes files that disappeared, rewrites
+ *     espadna.com → espadna.ir in text files, and turns _redirects into
+ *     .htaccess rules.
+ *   - type "api": copies config.json / words_fa.json after checking them
+ *     (valid JSON, never an older version) and the privacy page.
+ * When the source is unreachable (national internet) nothing is touched:
+ * the last good copy keeps being served.
+ *
+ * status.json (next to this file, and copied to each site as
+ * mirror-status.json) says when each site was last checked and updated.
+ */
+
+declare(strict_types=1);
+
+const USER_AGENT = 'espadna-mirror/1';
+const TEXT_EXT = ['html', 'htm', 'js', 'mjs', 'json', 'css', 'xml', 'txt', 'svg', 'webmanifest'];
+
+$dir = __DIR__;
+$cfg = require $dir . '/config.php';
+$force = in_array('--force', $argv ?? [], true);
+
+// One run at a time (cron fires every minute, a big update takes longer).
+$lock = fopen($dir . '/sync.lock', 'c');
+if (!$lock || !flock($lock, LOCK_EX | LOCK_NB)) {
+    exit(0);
+}
+set_time_limit(0);
+
+$statusFile = $dir . '/status.json';
+$status = is_file($statusFile) ? (json_decode((string) file_get_contents($statusFile), true) ?: []) : [];
+
+function logline(string $msg): void
+{
+    global $dir;
+    $line = gmdate('Y-m-d H:i:s') . ' ' . $msg . "\n";
+    $file = $dir . '/sync.log';
+    if (is_file($file) && filesize($file) > 512 * 1024) {
+        $tail = array_slice(file($file) ?: [], -2000);
+        file_put_contents($file, implode('', $tail));
+    }
+    file_put_contents($file, $line, FILE_APPEND);
+    if (PHP_SAPI === 'cli') {
+        echo $line;
+    }
+}
+
+function http_get(string $url, int $timeout): ?string
+{
+    $ch = curl_init($url);
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_CONNECTTIMEOUT => 10,
+        CURLOPT_TIMEOUT => $timeout,
+        CURLOPT_USERAGENT => USER_AGENT,
+        CURLOPT_ENCODING => '',
+        CURLOPT_HTTPHEADER => ['Cache-Control: no-cache'],
+    ]);
+    $body = curl_exec($ch);
+    $code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    return ($body !== false && $code === 200) ? $body : null;
+}
+
+/** Writes $data to $path atomically (temp file + rename), creating folders. */
+function put_file(string $path, string $data): bool
+{
+    $d = dirname($path);
+    if (!is_dir($d) && !mkdir($d, 0755, true) && !is_dir($d)) {
+        return false;
+    }
+    $tmp = $path . '.mirror-tmp';
+    if (file_put_contents($tmp, $data) === false) {
+        return false;
+    }
+    return rename($tmp, $path);
+}
+
+function safe_rel(string $rel): bool
+{
+    return $rel !== '' && $rel[0] !== '/' && strpos($rel, '..') === false && strpos($rel, "\0") === false
+        && strpos($rel, '.mirror') === false;
+}
+
+function rewrite(string $rel, string $data, array $map): string
+{
+    $ext = strtolower(pathinfo($rel, PATHINFO_EXTENSION));
+    if (!$map || !in_array($ext, TEXT_EXT, true)) {
+        return $data;
+    }
+    return strtr($data, $map);
+}
+
+/** Cloudflare _redirects ("from to [code]") → Apache rewrite rules. */
+function redirects_to_htaccess(string $redirects, array $map): string
+{
+    $rules = [];
+    foreach (preg_split('/\R/', $redirects) as $line) {
+        $line = trim($line);
+        if ($line === '' || $line[0] === '#') {
+            continue;
+        }
+        $parts = preg_split('/\s+/', $line);
+        if (count($parts) < 2) {
+            continue;
+        }
+        [$from, $to] = $parts;
+        $code = $parts[2] ?? '302';
+        $to = strtr($to, $map);
+        $pattern = '^' . preg_quote(ltrim($from, '/'), '#');
+        if (substr($pattern, -2) === '\*') {
+            $pattern = substr($pattern, 0, -2) . '(.*)';
+            $to = str_replace(':splat', '$1', $to);
+        }
+        $rules[] = "RewriteRule {$pattern}$ {$to} [R={$code},L]";
+    }
+    return $rules ? "RewriteEngine On\n" . implode("\n", $rules) . "\n" : '';
+}
+
+function write_htaccess(string $target, string $extra): void
+{
+    $base = <<<'HT'
+# Written by espadna-mirror (sync.php); changes here are overwritten.
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+AddType application/wasm .wasm
+AddType application/javascript .js .mjs
+AddType application/json .json
+AddType application/manifest+json .webmanifest
+AddType font/ttf .ttf
+AddType image/svg+xml .svg
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain application/javascript application/json application/wasm font/ttf image/svg+xml application/xml
+</IfModule>
+<IfModule mod_headers.c>
+  Header set Access-Control-Allow-Origin "*"
+  <FilesMatch "\.(html|json)$|^(sw|main\.dart|flutter_bootstrap)\.js$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+  <FilesMatch "\.(wasm|ttf|png|webp|jpg|svg)$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+</IfModule>
+<Files "mirror-manifest.json">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Deny from all
+  </IfModule>
+</Files>
+
+HT;
+    put_file($target . '/.htaccess', $base . $extra);
+}
+
+function sync_files(array $site, array $map, bool $force): string
+{
+    $src = rtrim($site['source'], '/');
+    $target = rtrim($site['target'], '/');
+    $raw = http_get($src . '/files.json', 30);
+    $manifest = $raw === null ? null : json_decode($raw, true);
+    if (!is_array($manifest) || !isset($manifest['files']) || !is_array($manifest['files'])) {
+        return 'unreachable';
+    }
+    $localFile = $target . '/mirror-manifest.json';
+    $local = is_file($localFile) ? (json_decode((string) file_get_contents($localFile), true) ?: []) : [];
+    if (!$force && ($local['version'] ?? null) === ($manifest['version'] ?? '') && ($local['map'] ?? null) === $map) {
+        return 'up to date';
+    }
+    $old = [];
+    foreach ($local['files'] ?? [] as $f) {
+        $old[$f['path']] = $f['sha256'];
+    }
+    $fetched = 0;
+    foreach ($manifest['files'] as $f) {
+        $rel = (string) ($f['path'] ?? '');
+        if (!safe_rel($rel) || $rel === '_redirects') {
+            continue;
+        }
+        $path = $target . '/' . $rel;
+        if (!$force && ($old[$rel] ?? '') === $f['sha256'] && ($local['map'] ?? []) === $map && is_file($path)) {
+            continue;
+        }
+        $data = http_get($src . '/' . str_replace('%2F', '/', rawurlencode($rel)), 300);
+        if ($data === null || hash('sha256', $data) !== $f['sha256']) {
+            // Changed again mid-sync, or the connection broke: keep the old
+            // copy and do not record the new version, so we retry next run.
+            return 'incomplete (' . $rel . ')';
+        }
+        if (!put_file($path, rewrite($rel, $data, $map))) {
+            return 'write failed (' . $rel . ')';
+        }
+        $fetched++;
+    }
+    // Files the source no longer has.
+    $now = array_column($manifest['files'], 'path');
+    foreach (array_diff(array_keys($old), $now) as $gone) {
+        if (safe_rel($gone) && is_file($target . '/' . $gone)) {
+            unlink($target . '/' . $gone);
+        }
+    }
+    $redirects = in_array('_redirects', $now, true) ? (http_get($src . '/_redirects', 30) ?? '') : '';
+    write_htaccess($target, redirects_to_htaccess($redirects, $map));
+    $manifest['map'] = $map;
+    put_file($localFile, json_encode($manifest));
+    return "updated to {$manifest['version']} ({$fetched} files)";
+}
+
+function json_version(?string $raw, string $key): ?int
+{
+    $d = $raw === null ? null : json_decode($raw, true);
+    return is_array($d) && isset($d[$key]) && is_int($d[$key]) ? $d[$key] : null;
+}
+
+function sync_api(array $site, array $map): string
+{
+    $src = rtrim($site['source'], '/');
+    $target = rtrim($site['target'], '/');
+    $done = [];
+    foreach (['config.json' => 'config_version', 'words_fa.json' => 'version'] as $file => $key) {
+        $raw = http_get("$src/$file", 30);
+        $new = json_version($raw, $key);
+        if ($new === null) {
+            $done[] = "$file unreachable";
+            continue;
+        }
+        $have = is_file("$target/$file") ? json_version((string) file_get_contents("$target/$file"), $key) : null;
+        if ($have !== null && $new < $have) {
+            $done[] = "$file kept v$have";
+            continue;
+        }
+        if ($have !== $new) {
+            put_file("$target/$file", $raw);
+            $done[] = "$file v$new";
+        }
+    }
+    $privacy = http_get("$src/privacy", 30);
+    if ($privacy !== null && stripos($privacy, '<html') !== false) {
+        put_file("$target/privacy.html", strtr($privacy, $map));
+    }
+    write_htaccess($target, "RewriteEngine On\nRewriteRule ^privacy/?$ privacy.html [L]\n");
+    return $done ? implode(', ', $done) : 'up to date';
+}
+
+foreach ($cfg['sites'] as $site) {
+    $name = $site['name'];
+    $interval = (int) ($site['interval'] ?? $cfg['interval'] ?? 300);
+    $last = (int) ($status[$name]['checked_at'] ?? 0);
+    if (!$force && time() - $last < $interval) {
+        continue;
+    }
+    if (!is_dir($site['target']) && !mkdir($site['target'], 0755, true)) {
+        logline("$name: target folder missing: {$site['target']}");
+        continue;
+    }
+    $map = $site['rewrite'] ?? $cfg['rewrite'] ?? [];
+    $result = ($site['type'] ?? 'files') === 'api' ? sync_api($site, $map) : sync_files($site, $map, $force);
+    $status[$name]['checked_at'] = time();
+    $status[$name]['checked'] = gmdate('c');
+    $status[$name]['result'] = $result;
+    if (strpos($result, 'updated') === 0 || strpos($result, ' v') !== false) {
+        $status[$name]['updated'] = gmdate('c');
+    }
+    if ($result !== 'up to date') {
+        logline("$name: $result");
+    }
+    put_file(rtrim($site['target'], '/') . '/mirror-status.json', json_encode($status[$name], JSON_PRETTY_PRINT));
+}
+put_file($statusFile, json_encode($status, JSON_PRETTY_PRINT));
