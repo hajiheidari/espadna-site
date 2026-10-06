@@ -100,7 +100,24 @@ function rewrite(string $rel, string $data, array $map): string
     if (!$map || !in_array($ext, TEXT_EXT, true)) {
         return $data;
     }
-    return strtr($data, $map);
+    // canonical / hreflang links keep pointing at the main (.com) pages, so
+    // search engines treat the copy as a mirror, not as duplicate content.
+    $keep = [];
+    if ($ext === 'html' || $ext === 'htm') {
+        $data = preg_replace_callback(
+            '/<link\b[^>]*\brel="(?:canonical|alternate)"[^>]*>/i',
+            function (array $m) use (&$keep): string {
+                $keep[] = $m[0];
+                return "\0keep" . (count($keep) - 1) . "\0";
+            },
+            $data
+        );
+    }
+    $data = strtr($data, $map);
+    foreach ($keep as $i => $tag) {
+        $data = str_replace("\0keep$i\0", $tag, $data);
+    }
+    return $data;
 }
 
 /** Cloudflare _redirects ("from to [code]") → Apache rewrite rules. */
@@ -126,11 +143,19 @@ function redirects_to_htaccess(string $redirects, array $map): string
         }
         $rules[] = "RewriteRule {$pattern}$ {$to} [R={$code},L]";
     }
-    return $rules ? "RewriteEngine On\n" . implode("\n", $rules) . "\n" : '';
+    return $rules ? implode("\n", $rules) . "\n" : '';
 }
 
-function write_htaccess(string $target, string $extra): void
+/**
+ * $spa: unknown paths serve index.html (single-page web apps).
+ * RewriteEngine On is always set: it also stops the main site's rules (in a
+ * parent folder's .htaccess) from applying to a subdomain folder inside it.
+ */
+function write_htaccess(string $target, string $extra, bool $spa = false): void
 {
+    $notFound = $spa
+        ? "RewriteCond %{REQUEST_FILENAME} !-f\nRewriteCond %{REQUEST_FILENAME} !-d\nRewriteRule ^ index.html [L]\n"
+        : '';
     $base = <<<'HT'
 # Written by espadna-mirror (sync.php); changes here are overwritten.
 DirectoryIndex index.html
@@ -162,8 +187,10 @@ AddType image/svg+xml .svg
   </IfModule>
 </Files>
 
+RewriteEngine On
+
 HT;
-    put_file($target . '/.htaccess', $base . $extra);
+    put_file($target . '/.htaccess', $base . $extra . $notFound);
 }
 
 function sync_files(array $site, array $map, bool $force): string
@@ -171,9 +198,12 @@ function sync_files(array $site, array $map, bool $force): string
     $src = rtrim($site['source'], '/');
     $target = rtrim($site['target'], '/');
     $raw = http_get($src . '/files.json', 30);
-    $manifest = $raw === null ? null : json_decode($raw, true);
-    if (!is_array($manifest) || !isset($manifest['files']) || !is_array($manifest['files'])) {
+    if ($raw === null) {
         return 'unreachable';
+    }
+    $manifest = json_decode($raw, true);
+    if (!is_array($manifest) || !isset($manifest['files']) || !is_array($manifest['files'])) {
+        return 'source has no files.json yet';
     }
     $localFile = $target . '/mirror-manifest.json';
     $local = is_file($localFile) ? (json_decode((string) file_get_contents($localFile), true) ?: []) : [];
@@ -212,8 +242,9 @@ function sync_files(array $site, array $map, bool $force): string
             unlink($target . '/' . $gone);
         }
     }
-    $redirects = in_array('_redirects', $now, true) ? (http_get($src . '/_redirects', 30) ?? '') : '';
-    write_htaccess($target, redirects_to_htaccess($redirects, $map));
+    // files.json carries the _redirects text (Cloudflare does not serve the file).
+    $redirects = is_string($manifest['redirects'] ?? null) ? $manifest['redirects'] : '';
+    write_htaccess($target, redirects_to_htaccess($redirects, $map), !empty($site['spa']));
     $manifest['map'] = $map;
     put_file($localFile, json_encode($manifest));
     return "updated to {$manifest['version']} ({$fetched} files)";
@@ -251,7 +282,7 @@ function sync_api(array $site, array $map): string
     if ($privacy !== null && stripos($privacy, '<html') !== false) {
         put_file("$target/privacy.html", strtr($privacy, $map));
     }
-    write_htaccess($target, "RewriteEngine On\nRewriteRule ^privacy/?$ privacy.html [L]\n");
+    write_htaccess($target, "RewriteRule ^privacy/?$ privacy.html [L]\n");
     return $done ? implode(', ', $done) : 'up to date';
 }
 
