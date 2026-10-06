@@ -56,8 +56,12 @@ function logline(string $msg): void
     }
 }
 
+/** Why the last http_get() failed, for status.json. */
+$httpError = '';
+
 function http_get(string $url, int $timeout): ?string
 {
+    global $httpError;
     $ch = curl_init($url);
     curl_setopt_array($ch, [
         CURLOPT_RETURNTRANSFER => true,
@@ -67,9 +71,16 @@ function http_get(string $url, int $timeout): ?string
         CURLOPT_USERAGENT => USER_AGENT,
         CURLOPT_ENCODING => '',
         CURLOPT_HTTPHEADER => ['Cache-Control: no-cache'],
+        // Many Iranian hosts have no working IPv6 route; Cloudflare offers both.
+        CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4,
     ]);
     $body = curl_exec($ch);
     $code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    if ($body === false) {
+        $httpError = 'curl ' . curl_errno($ch) . ': ' . curl_error($ch);
+    } elseif ($code !== 200) {
+        $httpError = "HTTP $code";
+    }
     curl_close($ch);
     return ($body !== false && $code === 200) ? $body : null;
 }
@@ -197,9 +208,10 @@ function sync_files(array $site, array $map, bool $force): string
 {
     $src = rtrim($site['source'], '/');
     $target = rtrim($site['target'], '/');
+    global $httpError;
     $raw = http_get($src . '/files.json', 30);
     if ($raw === null) {
-        return 'unreachable';
+        return "unreachable ($httpError)";
     }
     $manifest = json_decode($raw, true);
     if (!is_array($manifest) || !isset($manifest['files']) || !is_array($manifest['files'])) {
@@ -265,7 +277,8 @@ function sync_api(array $site, array $map): string
         $raw = http_get("$src/$file", 30);
         $new = json_version($raw, $key);
         if ($new === null) {
-            $done[] = "$file unreachable";
+            global $httpError;
+            $done[] = "$file unreachable" . ($raw === null ? " ($httpError)" : ' (not valid)');
             continue;
         }
         $have = is_file("$target/$file") ? json_version((string) file_get_contents("$target/$file"), $key) : null;
