@@ -28,7 +28,14 @@ const USER_AGENT = 'espadna-mirror/1';
 const TEXT_EXT = ['html', 'htm', 'js', 'mjs', 'json', 'css', 'xml', 'txt', 'svg', 'webmanifest'];
 
 $dir = __DIR__;
+// PHP errors (if any) go to a file next to this script, not to the void.
+ini_set('log_errors', '1');
+ini_set('error_log', $dir . '/php-errors.log');
 $cfg = require $dir . '/config.php';
+// Each run stops starting new downloads after this many seconds and goes on
+// in the next run (cron: every minute). Some hosts kill long cron jobs; the
+// progress is saved after every file, so nothing is lost.
+$deadline = time() + (int) ($cfg['run_seconds'] ?? 50);
 $force = in_array('--force', $argv ?? [], true);
 
 // One run at a time (cron fires every minute, a big update takes longer).
@@ -218,7 +225,12 @@ function http_get_file(string $url, int $size): ?string
     $piece = 0; // 0 = ask for the rest of the file; else bytes per request
     // Keep resuming while each try brings new bytes; after 2 tries without
     // progress switch to small pieces, and give up after 4.
+    global $deadline;
     for ($try = 0, $stuck = 0; $try < 2000 && $stuck < 4; $try++) {
+        if (time() > $deadline + 240) {
+            $httpError = 'out of time, continues next run';
+            return null;
+        }
         if ($stuck >= 2) {
             $piece = 65536;
         }
@@ -309,7 +321,16 @@ function sync_files(array $site, array $map, bool $force): string
     };
     $fetched = 0;
     $failed = [];
+    $paused = false;
+    global $deadline;
+    if (($local['version'] ?? '') !== 'partial') {
+        logline("{$site['name']}: syncing version " . ($manifest['version'] ?? '?'));
+    }
     foreach ($manifest['files'] as $f) {
+        if ($fetched > 0 && time() >= $deadline) {
+            $paused = true;
+            break;
+        }
         $rel = (string) ($f['path'] ?? '');
         if (!safe_rel($rel) || $rel === '_redirects') {
             continue;
@@ -335,6 +356,10 @@ function sync_files(array $site, array $map, bool $force): string
     // files.json carries the _redirects text (Cloudflare does not serve the file).
     $redirects = is_string($manifest['redirects'] ?? null) ? $manifest['redirects'] : '';
     write_htaccess($target, redirects_to_htaccess($redirects, $map), !empty($site['spa']));
+    if ($paused) {
+        return 'in progress: ' . count($have) . ' of ' . count($manifest['files'])
+            . ' files' . ($failed ? '; failed: ' . $failed[0] : '');
+    }
     if ($failed) {
         return 'incomplete: ' . count($failed) . " files left, got $fetched; first: " . $failed[0];
     }
@@ -387,7 +412,11 @@ function sync_api(array $site, array $map): string
     return $done ? implode(', ', $done) : 'up to date';
 }
 
+$ran = false;
 foreach ($cfg['sites'] as $site) {
+    if ($ran && time() >= $deadline) {
+        break; // the rest goes on in the next run
+    }
     $name = $site['name'];
     $interval = (int) ($site['interval'] ?? $cfg['interval'] ?? 300);
     $last = (int) ($status[$name]['checked_at'] ?? 0);
@@ -398,9 +427,11 @@ foreach ($cfg['sites'] as $site) {
         logline("$name: target folder missing: {$site['target']}");
         continue;
     }
+    $ran = true;
     $map = $site['rewrite'] ?? $cfg['rewrite'] ?? [];
     $result = ($site['type'] ?? 'files') === 'api' ? sync_api($site, $map) : sync_files($site, $map, $force);
-    $status[$name]['checked_at'] = time();
+    // An unfinished sync is not "checked": the next run (a minute later) goes on.
+    $status[$name]['checked_at'] = strpos($result, 'in progress') === 0 ? 0 : time();
     $status[$name]['checked'] = gmdate('c');
     $status[$name]['result'] = $result;
     if (strpos($result, 'updated') === 0 || strpos($result, ' v') !== false) {
@@ -410,5 +441,5 @@ foreach ($cfg['sites'] as $site) {
         logline("$name: $result");
     }
     put_file(rtrim($site['target'], '/') . '/mirror-status.json', json_encode($status[$name], JSON_PRETTY_PRINT));
+    put_file($statusFile, json_encode($status, JSON_PRETTY_PRINT));
 }
-put_file($statusFile, json_encode($status, JSON_PRETTY_PRINT));
