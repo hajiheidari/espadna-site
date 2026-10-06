@@ -18,34 +18,37 @@ return [
         'https://espadna.com' => 'https://espadna.ir',
         'espadna.com' => 'espadna.ir',
     ],
+    // Sources use plain http: from Iranian hosts, https to Cloudflare often
+    // hangs (connection opens, then no bytes), while http answers at once.
+    // Every file is still checked against its sha256 in files.json.
     'sites' => [
         [
             'name' => 'espadna',            // studio site + landing pages
-            'source' => 'https://espadna.com',
+            'source' => 'http://espadna.com',
             'target' => $root,
         ],
         [
             'name' => 'api',                // app settings, word list, privacy
             'type' => 'api',
-            'source' => 'https://api.espadna.com',
+            'source' => 'http://api.espadna.com',
             'target' => "$root/api",
             'interval' => 120,
         ],
         [
             'name' => 'pantomime',          // the web game: pantomime.espadna.ir
-            'source' => 'https://pantomime.espadna.com',
+            'source' => 'http://pantomime.espadna.com',
             'target' => "$root/pantomime",
             'spa' => true,
         ],
         [
             'name' => 'tiaro',              // tiaro.espadna.ir
-            'source' => 'https://tiaro.espadna.com',
+            'source' => 'http://tiaro.espadna.com',
             'target' => "$root/tiaro",
             'spa' => true,
         ],
         [
             'name' => 'tiaro-app',          // Tiaro's landing pages (its own Worker on .com)
-            'source' => 'https://espadna.com/tiaro-app',
+            'source' => 'http://espadna.com/tiaro-app',
             'target' => "$root/tiaro-app",
         ],
         // A new app: one more entry, e.g.
