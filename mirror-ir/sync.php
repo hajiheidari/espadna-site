@@ -206,16 +206,22 @@ HT;
 
 /**
  * Downloads one file, resuming with Range requests when the connection breaks
- * mid-way (common on Iranian links to foreign servers). No compression, so
- * byte offsets stay valid.
+ * mid-way (common on Iranian links to foreign servers). When that gets
+ * nowhere, it switches to small 64 KB pieces: some Iranian links cut every
+ * large response, but let small ones through. No compression, so byte
+ * offsets stay valid.
  */
 function http_get_file(string $url, int $size): ?string
 {
     global $httpError;
     $data = '';
-    // Keep resuming while each try brings new bytes; stop after 3 tries
-    // in a row without progress.
-    for ($try = 0, $stuck = 0; $try < 500 && $stuck < 3; $try++) {
+    $piece = 0; // 0 = ask for the rest of the file; else bytes per request
+    // Keep resuming while each try brings new bytes; after 2 tries without
+    // progress switch to small pieces, and give up after 4.
+    for ($try = 0, $stuck = 0; $try < 2000 && $stuck < 4; $try++) {
+        if ($stuck >= 2) {
+            $piece = 65536;
+        }
         $before = strlen($data);
         $chunk = '';
         $ch = curl_init($url);
@@ -234,7 +240,9 @@ function http_get_file(string $url, int $size): ?string
                 return strlen($s);
             },
         ];
-        if ($data !== '') {
+        if ($piece > 0) {
+            $opts[CURLOPT_RANGE] = strlen($data) . '-' . (min(strlen($data) + $piece, $size) - 1);
+        } elseif ($data !== '') {
             $opts[CURLOPT_RANGE] = strlen($data) . '-';
         }
         curl_setopt_array($ch, $opts);
@@ -242,19 +250,22 @@ function http_get_file(string $url, int $size): ?string
         $code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $err = $ok === false ? 'curl ' . curl_errno($ch) . ': ' . curl_error($ch) : '';
         curl_close($ch);
-        if ($code === 206 && $data !== '') {
+        if ($code === 206 && ($data !== '' || $piece > 0)) {
             $data .= $chunk;
         } elseif ($code === 200) {
             $data = $chunk; // a full answer (the server ignored the range)
         } else {
+            // No usable answer: keep what we have and try again.
             $httpError = $err !== '' ? $err : "HTTP $code";
-            $data = '';
             $stuck++;
             continue;
         }
         $stuck = strlen($data) > $before ? 0 : $stuck + 1;
-        if ($ok !== false || strlen($data) >= $size) {
+        if (strlen($data) >= $size || ($ok !== false && $piece === 0)) {
             return $data;
+        }
+        if ($ok !== false) {
+            continue; // next piece
         }
         $httpError = "$err after " . strlen($data) . " of $size bytes";
     }
