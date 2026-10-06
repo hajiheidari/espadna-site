@@ -204,6 +204,63 @@ HT;
     put_file($target . '/.htaccess', $base . $extra . $notFound);
 }
 
+/**
+ * Downloads one file, resuming with Range requests when the connection breaks
+ * mid-way (common on Iranian links to foreign servers). No compression, so
+ * byte offsets stay valid.
+ */
+function http_get_file(string $url, int $size): ?string
+{
+    global $httpError;
+    $data = '';
+    // Keep resuming while each try brings new bytes; stop after 3 tries
+    // in a row without progress.
+    for ($try = 0, $stuck = 0; $try < 500 && $stuck < 3; $try++) {
+        $before = strlen($data);
+        $chunk = '';
+        $ch = curl_init($url);
+        $opts = [
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_TIMEOUT => 300,
+            // Give up on a stalled transfer (< 1 KB/s for 20 s) and resume.
+            CURLOPT_LOW_SPEED_LIMIT => 1024,
+            CURLOPT_LOW_SPEED_TIME => 20,
+            CURLOPT_USERAGENT => USER_AGENT,
+            CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4,
+            CURLOPT_HTTPHEADER => ['Cache-Control: no-cache'],
+            CURLOPT_WRITEFUNCTION => function ($ch, string $s) use (&$chunk): int {
+                $chunk .= $s;
+                return strlen($s);
+            },
+        ];
+        if ($data !== '') {
+            $opts[CURLOPT_RANGE] = strlen($data) . '-';
+        }
+        curl_setopt_array($ch, $opts);
+        $ok = curl_exec($ch);
+        $code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $err = $ok === false ? 'curl ' . curl_errno($ch) . ': ' . curl_error($ch) : '';
+        curl_close($ch);
+        if ($code === 206 && $data !== '') {
+            $data .= $chunk;
+        } elseif ($code === 200) {
+            $data = $chunk; // a full answer (the server ignored the range)
+        } else {
+            $httpError = $err !== '' ? $err : "HTTP $code";
+            $data = '';
+            $stuck++;
+            continue;
+        }
+        $stuck = strlen($data) > $before ? 0 : $stuck + 1;
+        if ($ok !== false || strlen($data) >= $size) {
+            return $data;
+        }
+        $httpError = "$err after " . strlen($data) . " of $size bytes";
+    }
+    return null;
+}
+
 function sync_files(array $site, array $map, bool $force): string
 {
     $src = rtrim($site['source'], '/');
@@ -219,33 +276,56 @@ function sync_files(array $site, array $map, bool $force): string
     }
     $localFile = $target . '/mirror-manifest.json';
     $local = is_file($localFile) ? (json_decode((string) file_get_contents($localFile), true) ?: []) : [];
-    if (!$force && ($local['version'] ?? null) === ($manifest['version'] ?? '') && ($local['map'] ?? null) === $map) {
+    $sameMap = ($local['map'] ?? null) === $map;
+    if (!$force && $sameMap && ($local['version'] ?? null) === ($manifest['version'] ?? '')) {
         return 'up to date';
     }
-    $old = [];
-    foreach ($local['files'] ?? [] as $f) {
-        $old[$f['path']] = $f['sha256'];
+    // Files already in place (from the last complete sync, or from an
+    // interrupted one: progress is saved after every file).
+    $have = [];
+    if ($sameMap) {
+        foreach ($local['files'] ?? [] as $f) {
+            $have[$f['path']] = $f['sha256'];
+        }
     }
+    $old = $have;
+    $saveProgress = function () use (&$have, $localFile, $map): void {
+        $files = [];
+        foreach ($have as $p => $h) {
+            $files[] = ['path' => $p, 'sha256' => $h];
+        }
+        put_file($localFile, json_encode(['version' => 'partial', 'map' => $map, 'files' => $files]));
+    };
     $fetched = 0;
+    $failed = [];
     foreach ($manifest['files'] as $f) {
         $rel = (string) ($f['path'] ?? '');
         if (!safe_rel($rel) || $rel === '_redirects') {
             continue;
         }
         $path = $target . '/' . $rel;
-        if (!$force && ($old[$rel] ?? '') === $f['sha256'] && ($local['map'] ?? []) === $map && is_file($path)) {
+        if (!$force && ($have[$rel] ?? '') === $f['sha256'] && is_file($path)) {
             continue;
         }
-        $data = http_get($src . '/' . str_replace('%2F', '/', rawurlencode($rel)), 300);
+        $data = http_get_file($src . '/' . str_replace('%2F', '/', rawurlencode($rel)), (int) ($f['size'] ?? 0));
         if ($data === null || hash('sha256', $data) !== $f['sha256']) {
-            // Changed again mid-sync, or the connection broke: keep the old
-            // copy and do not record the new version, so we retry next run.
-            return 'incomplete (' . $rel . ')';
+            // The old copy (if any) stays; this file is retried next run.
+            $failed[] = $rel . ' (' . ($data === null ? $httpError : 'changed or damaged in transit') . ')';
+            continue;
         }
         if (!put_file($path, rewrite($rel, $data, $map))) {
-            return 'write failed (' . $rel . ')';
+            $failed[] = "$rel (write failed)";
+            continue;
         }
+        $have[$rel] = $f['sha256'];
+        $saveProgress();
         $fetched++;
+    }
+    // files.json carries the _redirects text (Cloudflare does not serve the file).
+    $redirects = is_string($manifest['redirects'] ?? null) ? $manifest['redirects'] : '';
+    write_htaccess($target, redirects_to_htaccess($redirects, $map), !empty($site['spa']));
+    if ($failed) {
+        return 'incomplete: ' . count($failed) . " files left, got $fetched; first: " . $failed[0];
     }
     // Files the source no longer has.
     $now = array_column($manifest['files'], 'path');
@@ -254,9 +334,6 @@ function sync_files(array $site, array $map, bool $force): string
             unlink($target . '/' . $gone);
         }
     }
-    // files.json carries the _redirects text (Cloudflare does not serve the file).
-    $redirects = is_string($manifest['redirects'] ?? null) ? $manifest['redirects'] : '';
-    write_htaccess($target, redirects_to_htaccess($redirects, $map), !empty($site['spa']));
     $manifest['map'] = $map;
     put_file($localFile, json_encode($manifest));
     return "updated to {$manifest['version']} ({$fetched} files)";
