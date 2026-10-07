@@ -171,6 +171,22 @@ function redirects_to_htaccess(string $redirects, array $map): string
  * RewriteEngine On is always set: it also stops the main site's rules (in a
  * parent folder's .htaccess) from applying to a subdomain folder inside it.
  */
+/**
+ * espadna.ir is the Iranian copy, so its pages open in Persian: a visitor who
+ * arrives from outside (search, a link, an app store) at the English root of a
+ * section with a fa/ version is sent to fa/. Language links inside the site
+ * (referer espadna.ir) are left alone, so English stays one click away.
+ */
+function persian_first(string $target): string
+{
+    if (!is_file(rtrim($target, '/') . '/fa/index.html')) {
+        return '';
+    }
+    return "RewriteCond %{REQUEST_URI} /$\n"
+        . "RewriteCond %{HTTP_REFERER} !^https?://([a-z0-9-]+\\.)?espadna\\.ir/ [NC]\n"
+        . "RewriteRule ^$ %{REQUEST_URI}fa/ [R=302,L]\n";
+}
+
 function write_htaccess(string $target, string $extra, bool $spa = false): void
 {
     $notFound = $spa
@@ -357,7 +373,7 @@ function sync_files(array $site, array $map, bool $force): string
     }
     // files.json carries the _redirects text (Cloudflare does not serve the file).
     $redirects = is_string($manifest['redirects'] ?? null) ? $manifest['redirects'] : '';
-    write_htaccess($target, redirects_to_htaccess($redirects, $map), !empty($site['spa']));
+    write_htaccess($target, persian_first($target) . redirects_to_htaccess($redirects, $map), !empty($site['spa']));
     if ($paused) {
         return 'in progress: ' . count($have) . ' of ' . count($manifest['files'])
             . ' files' . ($failed ? '; failed: ' . $failed[0] : '');
