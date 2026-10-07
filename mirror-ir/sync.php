@@ -5,7 +5,9 @@
  *
  * Run by cron (no SSH needed), e.g. every minute:
  *     php /home/USER/espadna-sync/sync.php
- * Settings: config.php next to this file (see config.sample.php).
+ * Settings: config.php next to this file (see config.sample.php). New apps
+ * need no config change: they come from sites.json on GitHub, and this
+ * script updates itself from there too (see discover_sites()).
  *
  * For every site in config.php:
  *   - type "files": downloads <source>/files.json (path + sha256 of every
@@ -411,6 +413,82 @@ function sync_api(array $site, array $map): string
     write_htaccess($target, "RewriteRule ^privacy/?$ privacy.html [L]\n");
     return $done ? implode(', ', $done) : 'up to date';
 }
+
+/**
+ * Adds the sites listed in <github>/sites.json (written by tools/mirror_pack.py)
+ * that config.php does not have yet, so a new app needs no edit on the host:
+ * a subdomain goes to its own DirectAdmin folder if it exists, else inside
+ * public_html; a folder goes inside public_html. Also updates this script when
+ * GitHub has a newer sync.php. GitHub unreachable: config.php alone, as before.
+ */
+function discover_sites(array $sites): array
+{
+    $git = $root = null;
+    foreach ($sites as $s) {
+        if (($s['name'] ?? '') === 'espadna') {
+            $git = dirname((string) $s['source']);
+            $root = rtrim((string) $s['target'], '/');
+        }
+    }
+    if ($git === null || $root === null) {
+        return $sites;
+    }
+    $raw = http_get("$git/sites.json", 30);
+    $list = $raw === null ? null : json_decode($raw, true);
+    if (!is_array($list) || !isset($list['sites']) || !is_array($list['sites'])) {
+        return $sites;
+    }
+    // .../domains/espadna.ir/public_html → home folder and domain.
+    $home = $domain = null;
+    if (preg_match('#^(.*)/domains/([^/]+)/public_html$#', $root, $m)) {
+        [$home, $domain] = [$m[1], $m[2]];
+    }
+    $known = array_column($sites, 'name');
+    $name_ok = '/^[a-z0-9-]+$/';
+    foreach ($list['sites'] as $s) {
+        $name = (string) ($s['name'] ?? '');
+        if (!preg_match($name_ok, $name) || in_array($name, $known, true)) {
+            continue;
+        }
+        $kind = $s['kind'] ?? '';
+        if ($kind === 'subdomain' && preg_match($name_ok, (string) ($s['sub'] ?? ''))) {
+            $own = $home !== null ? "$home/domains/{$s['sub']}.$domain/public_html" : null;
+            $target = ($own !== null && is_dir($own)) ? $own : "$root/{$s['sub']}";
+        } elseif ($kind === 'folder' && preg_match('#^[a-z0-9-]+(/[a-z0-9-]+)*$#', (string) ($s['path'] ?? ''))) {
+            $target = "$root/{$s['path']}";
+        } else {
+            continue;
+        }
+        $sites[] = ['name' => $name, 'source' => "$git/$name", 'target' => $target, 'spa' => !empty($s['spa'])];
+        $known[] = $name;
+    }
+    update_self($git, (string) ($list['sync_php']['sha256'] ?? ''));
+    return $sites;
+}
+
+/**
+ * Replaces this file with the sync.php on GitHub when its sha256 differs and
+ * the download matches it (the old one stays as sync.php.bak). The new
+ * version runs from the next cron run on.
+ */
+function update_self(string $git, string $want): void
+{
+    $self = __FILE__;
+    if (!preg_match('/^[0-9a-f]{64}$/', $want) || hash_file('sha256', $self) === $want) {
+        return;
+    }
+    $new = http_get("$git/sync.php", 60);
+    if ($new === null || hash('sha256', $new) !== $want || strncmp($new, '<?php', 5) !== 0) {
+        return;
+    }
+    if (!copy($self, "$self.bak") || !put_file($self, $new)) {
+        logline('sync.php: self-update failed');
+        return;
+    }
+    logline('sync.php: updated to ' . substr($want, 0, 12) . ' (previous one in sync.php.bak)');
+}
+
+$cfg['sites'] = discover_sites($cfg['sites']);
 
 $ran = false;
 foreach ($cfg['sites'] as $site) {

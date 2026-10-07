@@ -44,8 +44,14 @@
 
 ## اپ جدید
 
-یک مورد به `sites` در `config.php` و به `FILE_SITES` در `tools/mirror_pack.py`
-اضافه کنید (و زیردامنه‌اش را بسازید). سایت
-اپ باید در ریشه‌اش `files.json` منتشر کند: فهرست فایل‌ها با sha256 و متن
-`_redirects` در فیلد `redirects` (پانتومیم: `tool/web_finish.mjs`، espadna.com:
-`tools/manifest.py` در workflow). تا آن موقع وضعیتش `source has no files.json yet` است.
+روی هاست کاری لازم نیست (جز ساختن زیردامنه و SSL اگر اپ زیردامنه دارد). کافی است اپ در `FILE_SITES` در
+`tools/mirror_pack.py` باشد: workflow `mirror-pack` فهرست سایت‌ها را در `sites.json` شاخه‌ی `mirror` می‌گذارد و
+`sync.php` هر اپی را که در `config.php` نیست از آنجا پیدا می‌کند (زیردامنه در پوشه‌ی خودش در DirectAdmin اگر هست،
+وگرنه داخل `public_html`؛ مسیرها داخل `public_html`). سایت اپ باید در ریشه‌اش `files.json` منتشر کند: فهرست
+فایل‌ها با sha256 و متن `_redirects` در فیلد `redirects` (پانتومیم: `tool/web_finish.mjs`، تیارو:
+`scripts/build-site.mjs`، عددی: `site/manifest.py`، espadna.com: `tools/manifest.py` در workflow).
+
+**به‌روزرسانی خودکار `sync.php`:** همان workflow یک نسخه از `mirror-ir/sync.php` و sha256 آن را هم در شاخه‌ی
+`mirror` می‌گذارد. اسکریپت روی هاست اگر نسخه‌ی گیت‌هاب فرق داشت و sha256 درست بود، خودش را عوض می‌کند (نسخه‌ی
+قبلی در `sync.php.bak` می‌ماند) و از اجرای بعدی نسخه‌ی تازه کار می‌کند. پس تغییر این فایل فقط با push به `main`
+به هاست می‌رسد؛ با دقت تغییرش دهید.

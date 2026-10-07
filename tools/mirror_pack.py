@@ -101,12 +101,34 @@ def pack_api(out: pathlib.Path) -> str:
     return 'api: ' + ', '.join(done)
 
 
+def write_sites(out: pathlib.Path) -> str:
+    """sites.json: every mirrored site, so mirror-ir/sync.php picks up new apps by
+    itself (no config.php edit on the host), plus the current sync.php with its
+    sha256 so the host script can update itself."""
+    sites = []
+    for name, src in FILE_SITES.items():
+        if name == 'espadna':
+            continue  # the studio site: always in config.php (it is the root folder)
+        url = urllib.parse.urlsplit(src)
+        host, path = url.netloc, url.path.strip('/')
+        if path:  # espadna.com/<path>: a folder of espadna.ir
+            sites.append({'name': name, 'kind': 'folder', 'path': path})
+        else:     # <sub>.espadna.com: a subdomain of espadna.ir (a web game: SPA)
+            sites.append({'name': name, 'kind': 'subdomain', 'sub': host.split('.')[0], 'spa': True})
+    script = pathlib.Path(__file__).resolve().parent.parent / 'mirror-ir' / 'sync.php'
+    data = script.read_bytes()
+    (out / 'sync.php').write_bytes(data)
+    (out / 'sites.json').write_text(json.dumps({'sites': sites, 'sync_php': {'sha256': sha(data)}}, indent=1))
+    return f'sites.json: {len(sites)} sites, sync.php {sha(data)[:12]}'
+
+
 def main() -> None:
     out = pathlib.Path(sys.argv[1])
     out.mkdir(parents=True, exist_ok=True)
     for name, src in FILE_SITES.items():
         print(pack_site(out, name, src))
     print(pack_api(out))
+    print(write_sites(out))
 
 
 if __name__ == '__main__':
