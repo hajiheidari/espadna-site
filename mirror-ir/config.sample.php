@@ -6,6 +6,12 @@
 $home = '/home/USERNAME';                          // the hosting account's home folder
 $root = "$home/domains/espadna.ir/public_html";   // espadna.ir
 $git = 'https://raw.githubusercontent.com/hajiheidari/espadna-site/mirror';
+// A subdomain's folder: DirectAdmin puts it either inside public_html or,
+// on some setups, in its own domains/<sub>.espadna.ir/public_html.
+$sub = function (string $name) use ($home, $root): string {
+    $own = "$home/domains/$name.espadna.ir/public_html";
+    return is_dir($own) ? $own : "$root/$name";
+};
 
 return [
     // Seconds between checks (the cron job can run every minute).
@@ -39,13 +45,13 @@ return [
         [
             'name' => 'pantomime',          // the web game: pantomime.espadna.ir
             'source' => "$git/pantomime",
-            'target' => "$root/pantomime",
+            'target' => $sub('pantomime'),
             'spa' => true,
         ],
         [
             'name' => 'tiaro',              // tiaro.espadna.ir
             'source' => "$git/tiaro",
-            'target' => "$root/tiaro",
+            'target' => $sub('tiaro'),
             'spa' => true,
         ],
         [
