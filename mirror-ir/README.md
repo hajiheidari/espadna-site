@@ -13,12 +13,14 @@
 | `pantomime.espadna.com` (بازی) | `pantomime.espadna.ir` | `public_html/pantomime` |
 | `tiaro.espadna.com` | `tiaro.espadna.ir` | `public_html/tiaro` |
 | `espadna.com/tiaro-app` | `espadna.ir/tiaro-app` | `public_html/tiaro-app` |
+| `adadi.espadna.com` (بازی عددی) | `adadi.espadna.ir` | `public_html/adadi` |
+| `espadna.com/adadi-app` | `espadna.ir/adadi-app` | `public_html/adadi-app` |
 
 (`public_html` یعنی `/home/USERNAME/domains/espadna.ir/public_html`.)
 
 ## راه‌اندازی (یک بار، از پنل DirectAdmin)
 
-1. **زیردامنه‌ها** (`pantomime`، `tiaro`) را بسازید. پوشه‌ی `api` را خود
+1. **زیردامنه‌ها** (`pantomime`، `tiaro`، `adadi`) را بسازید. پوشه‌ی `api` را خود
    اسکریپت می‌سازد.
 2. **SSL:** در SSL Certificates گزینه‌ی Let's Encrypt را برای `espadna.ir`،
    `www` و زیردامنه‌ها بگیرید. در Domain Setup، `private_html` باید «لینک به

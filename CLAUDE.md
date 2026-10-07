@@ -10,4 +10,4 @@
 - Do not deploy by hand (`wrangler deploy`). Pushing to `main` deploys via
   GitHub Actions.
 - English at the root of every section, Persian in `fa/`, Arabic in `ar/`.
-- Tiaro's landing pages are NOT here (served by its own Worker route, see README); keep only its card and sitemap lines.
+- Tiaro's and Adadi's landing pages are NOT here (each is served by its own Worker route, see README); keep only their cards and sitemap lines.

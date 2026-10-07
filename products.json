@@ -58,6 +58,35 @@
         "en": "https://tiaro.espadna.com/?lang=en",
         "ar": "https://tiaro.espadna.com/?lang=ar"
       }
+    },
+    {
+      "id": "adadi",
+      "icon": "/adadi-app/icon.png",
+      "kind": {
+        "fa": "بازی",
+        "en": "Game",
+        "ar": "لعبة"
+      },
+      "name": {
+        "fa": "عددی",
+        "en": "Adadi",
+        "ar": "عددي"
+      },
+      "desc": {
+        "fa": "جدول متقاطع ریاضی: عددها را در خانه‌های خالی بگذار تا همه‌ی معادله‌ها درست شوند. هر روز یک پازل تازه، با تقویم شمسی و ارقام فارسی.",
+        "en": "The math crossword: place the numbers so every equation is true. A new puzzle every day, in English, Arabic, Persian and Urdu.",
+        "ar": "الكلمات المتقاطعة بالأرقام: ضع الأرقام لتصبح كل المعادلات صحيحة. لغز جديد كل يوم، بالعربية والإنجليزية والفارسية والأردية."
+      },
+      "page": {
+        "fa": "/adadi-app/fa/",
+        "en": "/adadi-app/",
+        "ar": "/adadi-app/ar/"
+      },
+      "web": {
+        "fa": "https://adadi.espadna.com/?lang=fa",
+        "en": "https://adadi.espadna.com/?lang=en",
+        "ar": "https://adadi.espadna.com/?lang=ar"
+      }
     }
   ]
 }

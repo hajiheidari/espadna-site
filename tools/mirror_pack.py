@@ -24,6 +24,8 @@ FILE_SITES = {
     'pantomime': 'https://pantomime.espadna.com',
     'tiaro': 'https://tiaro.espadna.com',
     'tiaro-app': 'https://espadna.com/tiaro-app',
+    'adadi': 'https://adadi.espadna.com',
+    'adadi-app': 'https://espadna.com/adadi-app',
 }
 API = 'https://api.espadna.com'
 API_JSON = {'config.json': 'config_version', 'words_fa.json': 'version'}

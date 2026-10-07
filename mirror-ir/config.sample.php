@@ -59,6 +59,17 @@ return [
             'source' => "$git/tiaro-app",
             'target' => "$root/tiaro-app",
         ],
+        [
+            'name' => 'adadi',              // adadi.espadna.ir (the web game)
+            'source' => "$git/adadi",
+            'target' => $sub('adadi'),
+            'spa' => true,
+        ],
+        [
+            'name' => 'adadi-app',          // Adadi's landing pages (its own Worker on .com)
+            'source' => "$git/adadi-app",
+            'target' => "$root/adadi-app",
+        ],
         // A new app: one more entry, e.g.
         // (and the site in tools/mirror_pack.py)
         // ['name' => 'x', 'source' => "$git/x", 'target' => "$root/x", 'spa' => true],
