@@ -33,13 +33,17 @@
    `espadna-sync/sync.log` است. `unreachable` یعنی PHP هاست به سایت‌های خارجی
    وصل نمی‌شود (از پشتیبانی بخواهید باز کنند).
 
-منبع‌ها با `http` خوانده می‌شوند، نه `https`: از هاست ایرانی، اتصال https به
-Cloudflare باز می‌شود ولی هیچ داده‌ای نمی‌آید (تست مهر ۱۴۰۵ روی irwebspace)، اما
-http فوری جواب می‌دهد. سالم بودن هر فایل با sha256 فهرست `files.json` چک می‌شود.
+**منبع فایل‌ها گیت‌هاب است، نه Cloudflare:** از هاست ایرانی، دانلود از Cloudflare بعد
+از حدود ۶۳ کیلوبایت متوقف می‌شود (تست مهر ۱۴۰۵ روی irwebspace)، ولی گیت‌هاب کار
+می‌کند. workflow `mirror-pack` هر ۱۰ دقیقه (و بعد از هر انتشار سایت) نسخه‌ی زنده‌ی
+سایت‌ها را در شاخه‌ی `mirror` همین مخزن می‌گذارد (`tools/mirror_pack.py`، همیشه
+یک commit، پس مخزن بزرگ نمی‌شود) و `sync.php` از `raw.githubusercontent.com`
+می‌خواند. سالم بودن هر فایل با sha256 فهرست `files.json` چک می‌شود.
 
 ## اپ جدید
 
-یک مورد به `sites` در `config.php` اضافه کنید (و زیردامنه‌اش را بسازید). سایت
+یک مورد به `sites` در `config.php` و به `FILE_SITES` در `tools/mirror_pack.py`
+اضافه کنید (و زیردامنه‌اش را بسازید). سایت
 اپ باید در ریشه‌اش `files.json` منتشر کند: فهرست فایل‌ها با sha256 و متن
 `_redirects` در فیلد `redirects` (پانتومیم: `tool/web_finish.mjs`، espadna.com:
 `tools/manifest.py` در workflow). تا آن موقع وضعیتش `source has no files.json yet` است.

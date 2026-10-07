@@ -5,6 +5,7 @@
 // use the folders the panel shows for each subdomain.
 $home = '/home/USERNAME';                          // the hosting account's home folder
 $root = "$home/domains/espadna.ir/public_html";   // espadna.ir
+$git = 'https://raw.githubusercontent.com/hajiheidari/espadna-site/mirror';
 
 return [
     // Seconds between checks (the cron job can run every minute).
@@ -18,40 +19,42 @@ return [
         'https://espadna.com' => 'https://espadna.ir',
         'espadna.com' => 'espadna.ir',
     ],
-    // Sources use plain http: from Iranian hosts, https to Cloudflare often
-    // hangs (connection opens, then no bytes), while http answers at once.
-    // Every file is still checked against its sha256 in files.json.
+    // Sources: the `mirror` branch of the espadna-site repository on GitHub
+    // (refreshed every 10 minutes by .github/workflows/mirror-pack.yml).
+    // From Iranian hosts, downloads from Cloudflare stall after ~63 KB,
+    // while GitHub works. Every file is checked against its sha256.
     'sites' => [
         [
             'name' => 'espadna',            // studio site + landing pages
-            'source' => 'http://espadna.com',
+            'source' => "$git/espadna",
             'target' => $root,
         ],
         [
             'name' => 'api',                // app settings, word list, privacy
             'type' => 'api',
-            'source' => 'http://api.espadna.com',
+            'source' => "$git/api",
             'target' => "$root/api",
             'interval' => 120,
         ],
         [
             'name' => 'pantomime',          // the web game: pantomime.espadna.ir
-            'source' => 'http://pantomime.espadna.com',
+            'source' => "$git/pantomime",
             'target' => "$root/pantomime",
             'spa' => true,
         ],
         [
             'name' => 'tiaro',              // tiaro.espadna.ir
-            'source' => 'http://tiaro.espadna.com',
+            'source' => "$git/tiaro",
             'target' => "$root/tiaro",
             'spa' => true,
         ],
         [
             'name' => 'tiaro-app',          // Tiaro's landing pages (its own Worker on .com)
-            'source' => 'http://espadna.com/tiaro-app',
+            'source' => "$git/tiaro-app",
             'target' => "$root/tiaro-app",
         ],
         // A new app: one more entry, e.g.
-        // ['name' => 'x', 'source' => 'https://x.espadna.com', 'target' => "$root/x", 'spa' => true],
+        // (and the site in tools/mirror_pack.py)
+        // ['name' => 'x', 'source' => "$git/x", 'target' => "$root/x", 'spa' => true],
     ],
 ];

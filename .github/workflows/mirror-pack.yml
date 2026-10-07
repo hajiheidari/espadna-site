@@ -1,0 +1,48 @@
+# Keeps a copy of the live sites on the `mirror` branch, for the Iranian host
+# (mirror-ir/sync.php reads it from raw.githubusercontent.com: Iranian links
+# to Cloudflare stall on large files, GitHub works).
+# The branch always holds a single commit, so the repository does not grow.
+name: Mirror pack
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_run:
+    workflows: [Deploy espadna.com]
+    types: [completed]
+  workflow_dispatch:
+
+concurrency:
+  group: mirror-pack
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  pack:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: main
+      - name: Current mirror branch
+        run: |
+          git clone --depth 1 --branch mirror \
+            "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" pack \
+            || { mkdir pack && git -C pack init -q -b mirror; }
+      - name: Copy the live sites
+        run: python3 main/tools/mirror_pack.py pack
+      - name: Publish (one commit, only when something changed)
+        working-directory: pack
+        run: |
+          git add -A
+          if git rev-parse -q --verify HEAD >/dev/null && git diff --cached --quiet; then
+            echo "Nothing changed."; exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -q --orphan fresh
+          git commit -qm "Mirror of the live sites ($(date -u +%FT%TZ))"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" fresh:mirror
