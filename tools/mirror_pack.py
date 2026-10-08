@@ -14,6 +14,7 @@ against its sha256. A site whose source is unreachable keeps its old copy.
 import hashlib
 import json
 import pathlib
+import re
 import shutil
 import sys
 import urllib.parse
@@ -27,6 +28,10 @@ FILE_SITES = {
     'adadi': 'https://adadi.espadna.com',
     'adadi-app': 'https://espadna.com/adadi-app',
 }
+# Web games that do not open in Persian on a .ir address by themselves (Tiaro
+# and Adadi do): their copy gets ?lang=fa unless the link asks for a language.
+# The player's saved choice in the game still wins.
+PERSIAN_GAMES = {'pantomime'}
 API = 'https://api.espadna.com'
 API_JSON = {'config.json': 'config_version', 'words_fa.json': 'version'}
 
@@ -71,10 +76,58 @@ def pack_site(out: pathlib.Path, name: str, src: str) -> str:
         target = staging / rel
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(data)
+    if for_iran(staging, name, src, files):
+        # A new version, so the Iranian host copies the changed pages.
+        manifest['version'] = f'{manifest.get("version")}-ir{sha((IR_SCRIPT + IR_GAME_SCRIPT).encode())[:6]}'
     (staging / 'files.json').write_text(json.dumps(manifest))
     shutil.rmtree(folder, ignore_errors=True)
     staging.rename(folder)
     return f'{name}: {manifest.get("version")} ({len(files)} files, {fetched} downloaded)'
+
+
+# espadna.ir is the Iranian copy, so it opens in Persian (Amir, 2026-10-08).
+# An English page that has a fa/ version sends visitors who come from outside
+# (typed address, search, an app store) to fa/; the language links inside the
+# site (referrer espadna.ir) are left alone, so English stays one click away.
+# Done in the page, not in .htaccess: it reaches the host with the files.
+IR_SCRIPT = ('<script>if(!/^https?:\\/\\/([a-z0-9-]+\\.)*espadna\\.ir(:\\d+)?\\//i.test(document.referrer))'
+             'location.replace(%s+location.search+location.hash)</script>')
+IR_GAME_SCRIPT = ('<script>if(!/[?&]lang=/.test(location.search))history.replaceState(null,"",'
+                  'location.pathname+(location.search?location.search+"&":"?")+"lang=fa"+location.hash)</script>')
+
+
+def inject(html: bytes, script: str) -> bytes:
+    """Puts script first in <head> (after <meta charset> if present), so it runs
+    before anything else loads."""
+    text = html.decode('utf-8')
+    m = re.search(r'<meta charset=[^>]*>', text, re.I) or re.search(r'<head[^>]*>', text, re.I)
+    if not m:
+        return html
+    return (text[:m.end()] + script + text[m.end():]).encode('utf-8')
+
+
+def for_iran(folder: pathlib.Path, name: str, src: str, files: list) -> bool:
+    """Persian-first changes for the .ir copy; updates the files entries."""
+    prefix = urllib.parse.urlsplit(src).path.rstrip('/') + '/'
+    paths = {f['path'] for f in files}
+    changed = False
+    for f in files:
+        rel = f['path']
+        if name in PERSIAN_GAMES:
+            script = IR_GAME_SCRIPT if rel == 'index.html' else None
+        else:
+            section = rel[:-len('index.html')]
+            ok = rel.endswith('index.html') and (rel == 'index.html' or rel.endswith('/index.html'))
+            script = (IR_SCRIPT % json.dumps(prefix + section + 'fa/')
+                      if ok and section + 'fa/index.html' in paths else None)
+        if script is None:
+            continue
+        path = folder / rel
+        data = inject(path.read_bytes(), script)
+        path.write_bytes(data)
+        f['sha256'], f['size'] = sha(data), len(data)
+        changed = True
+    return changed
 
 
 def pack_api(out: pathlib.Path) -> str:
