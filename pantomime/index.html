@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <!-- Replaced by tool/build_web.sh with "./" so the same build works under
+       any folder (/play/ on Cloudflare, /pantomime/play/ on a mirror). -->
+  <base href="./">
+  <meta charset="UTF-8"><script>if(!/[?&]lang=/.test(location.search))history.replaceState(null,"",location.pathname+(location.search?location.search+"&":"?")+"lang=fa"+location.hash)</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="پانتومیم دورهمی: بازی ادا و حدس کلمه برای دورهمی‌ها. بدون نصب، حتی بدون اینترنت.">
+  <meta name="theme-color" content="#1A0F3D">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="پانتومیم">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="manifest" href="manifest.json">
+  <title>پانتومیم دورهمی</title>
+  <style>
+    html, body { margin: 0; height: 100%; background: #1A0F3D; overflow: hidden; }
+    #loading {
+      position: fixed; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 24px;
+      background: radial-gradient(circle at 50% 40%, #5A36C9, #2A1B5C 60%, #1A0F3D);
+      color: #FFD23F; font: 900 22px Tahoma, sans-serif; transition: opacity .3s;
+    }
+    #loading img { width: 128px; height: 128px; border-radius: 28px; animation: bob 1.2s ease-in-out infinite; }
+    #loading .bar { width: 160px; height: 8px; border-radius: 4px; background: #120A2B; overflow: hidden; }
+    #loading .bar::after { content: ""; display: block; width: 40%; height: 100%; background: #FFD23F; border-radius: 4px; animation: slide 1.1s ease-in-out infinite; }
+    @keyframes bob { 50% { transform: translateY(-10px) rotate(-4deg); } }
+    @keyframes slide { 0% { transform: translateX(260%); } 100% { transform: translateX(-120%); } }
+  </style>
+</head>
+<body>
+  <div id="loading">
+    <img src="icons/Icon-192.png" alt="">
+    <div id="loading-title">پانتومیم دورهمی</div>
+    <div class="bar"></div>
+  </div>
+  <noscript>برای بازی، جاوااسکریپت مرورگر را روشن کنید.</noscript>
+  <script>
+    // Roughly the app's default language rule (lib/core/l10n/default_language.dart).
+    (function () {
+      var q = new URLSearchParams(location.search).get('lang');
+      var langs = (navigator.languages || [navigator.language || '']).join(',').toLowerCase();
+      var off = -new Date().getTimezoneOffset();
+      var lang = q === 'fa' || q === 'en' || q === 'ar' ? q
+        : /(^|,)(fa|prs)|[-_](ir|af)(,|$)/.test(langs) || off === 210 || off === 270 ? 'fa'
+        : /(^|,)ar/.test(langs) ? 'ar' : 'en';
+      var name = { fa: 'پانتومیم دورهمی', en: 'Pantomime Party', ar: 'بانتومايم الحفلات' }[lang];
+      document.documentElement.lang = lang;
+      document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
+      document.title = name;
+      document.getElementById('loading-title').textContent = name;
+    })();
+  </script>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>

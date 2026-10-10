@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>حریم خصوصی پانتومیم دورهمی · Privacy</title>
+<style>
+  body { font-family: Vazirmatn, Tahoma, sans-serif; max-width: 720px; margin: 0 auto;
+         padding: 24px 16px; line-height: 1.9; color: #1a0f3d; background: #fff8e7; }
+  h1 { font-size: 1.5rem } h2 { font-size: 1.15rem; margin-top: 2rem }
+  section[lang=en] { direction: ltr; text-align: left; font-family: system-ui, sans-serif;
+         border-top: 2px solid #2a1b5c; margin-top: 2.5rem; padding-top: 1rem }
+</style>
+</head>
+<body>
+<h1>🎭 سیاست حریم خصوصی «پانتومیم دورهمی»</h1>
+<p>آخرین به‌روزرسانی: مهر ۱۴۰۵</p>
+<ul>
+  <li>بازی <b>حساب کاربری و ثبت‌نام ندارد</b> و هیچ اطلاعات شخصی (نام، شماره، ایمیل، موقعیت) از شما نمی‌گیرد.</li>
+  <li>نام تیم‌ها، تنظیمات و سابقه کلمه‌ها <b>فقط روی گوشی خودتان</b> ذخیره می‌شود.</li>
+  <li><b>ضبط ویدیو</b> اختیاری و پیش‌فرض خاموش است. فقط اگر خودتان روشنش کنید، دوربین جلو و میکروفون در حالت «گوشی روی پیشونی» استفاده می‌شوند. ویدیوها روی گوشی شما می‌مانند و <b>هرگز آپلود نمی‌شوند</b>؛ فقط اگر خودتان ذخیره یا ارسال کنید.</li>
+  <li>هنگام اجرا، بازی یک فایل تنظیمات کوچک (فقط تنظیمات نمایش تبلیغ) از سرور ما می‌گیرد. در این درخواست هیچ اطلاعاتی از شما ارسال نمی‌شود؛ مانند هر درخواست اینترنتی، نشانی IP برای سرور قابل مشاهده است و ذخیره نمی‌کنیم.</li>
+  <li><b>تبلیغات:</b> بازی رایگان است و تبلیغ نشان می‌دهد. شبکه‌های تبلیغاتی (عدیوری/یکتانت، و در نسخه‌های گوگل‌پلی و iOS، گوگل ادموب) ممکن است شناسه تبلیغاتی دستگاه، اطلاعات فنی گوشی و نشانی IP را برای نمایش و اندازه‌گیری تبلیغ پردازش کنند. SDK عدیوری برای گزارش خطای خودش از Sentry استفاده می‌کند. سیاست‌های این شبکه‌ها: <a href="https://adivery.com">adivery.com</a> ، <a href="https://policies.google.com/technologies/ads">Google</a>.</li>
+  <li>در حین بازی (وقتی نوبتی در جریان است) هیچ تبلیغی نمایش داده نمی‌شود.</li>
+  <li>بازی برای همه سنین طراحی شده و محتوای نامناسب ندارد.</li>
+</ul>
+
+
+<section lang="en">
+<h2>Privacy policy — Pantomime Party</h2>
+<ul>
+  <li>No accounts, no sign-up, no personal data collected (no name, phone, email or location).</li>
+  <li>Team names, settings and word history are stored only on your device.</li>
+  <li><b>Video recording</b> is optional and off by default. Only if you turn it on, the front camera and microphone are used in forehead mode. Videos stay on your device and are <b>never uploaded</b>, unless you save or share them yourself.</li>
+  <li>On start the game downloads a small settings file (ad settings only). Nothing about you is sent; as with any web request the server sees an IP address, which we do not store.</li>
+  <li><b>Ads:</b> the game is free and shows ads. Ad networks (Adivery/Yektanet and, in Google Play and iOS builds, Google AdMob) may process the device advertising ID, technical device data and IP address to serve and measure ads. The Adivery SDK uses Sentry for its own crash reports.</li>
+  <li>No ads are ever shown while a round is being played.</li>
+  <li>Suitable for all ages; no user-generated content.</li>
+</ul>
+
+</section>
+</body>
+</html>

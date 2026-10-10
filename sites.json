@@ -1,0 +1,35 @@
+{
+ "sites": [
+  {
+   "name": "pantomime",
+   "kind": "subdomain",
+   "sub": "pantomime",
+   "spa": true
+  },
+  {
+   "name": "tiaro",
+   "kind": "subdomain",
+   "sub": "tiaro",
+   "spa": true
+  },
+  {
+   "name": "tiaro-app",
+   "kind": "folder",
+   "path": "tiaro-app"
+  },
+  {
+   "name": "adadi",
+   "kind": "subdomain",
+   "sub": "adadi",
+   "spa": true
+  },
+  {
+   "name": "adadi-app",
+   "kind": "folder",
+   "path": "adadi-app"
+  }
+ ],
+ "sync_php": {
+  "sha256": "ffb4aee8c738c2bab424e5c840b9cfa47b7a15898db25b467163ea86e73ca44b"
+ }
+}
