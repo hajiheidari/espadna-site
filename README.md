@@ -20,7 +20,7 @@ the espadna.com zone (a route wins over this site). Only their card in
 | Tiaro | Worker `crowns-app` (route `espadna.com/tiaro-app*`) | hajiheidari/crowns-app (`web/tiaro-app/`) |
 | Pantomime | this repo (`public/pantomime-app/`) | hajiheidari/pantomime (game) |
 | Adadi | Worker `adadi` (route `espadna.com/adadi-app*`) | hajiheidari/math-game (`site/adadi-app/`) |
-| Mench | Worker `mench` (route `espadna.com/mench-app*`) | hajiheidari/mench (`apps/edge/site/mench-app/`) |
+| VIP Ludo (Mench) | Worker `mench` (route `espadna.com/mench-app*`) | hajiheidari/mench (`apps/edge/site/mench-app/`) |
 
 English is always the root of a section; Persian and Arabic live in `fa/` and `ar/`.
 

@@ -97,14 +97,14 @@
         "ar": "لعبة"
       },
       "name": {
-        "fa": "منچ",
-        "en": "Mench",
-        "ar": "منچ (لودو)"
+        "fa": "VIP Ludo",
+        "en": "VIP Ludo",
+        "ar": "VIP Ludo"
       },
       "desc": {
-        "fa": "همان منچ نوستالژیک با مهره‌های قرمز، سبز، زرد و آبی؛ با یک لینک دوستانت را دعوت کن، با ربات تمرین کن یا روی یک گوشی بازی کنید.",
-        "en": "The classic Ludo board game in red, green, yellow and blue: invite friends with one link, practice against the bot or play on one phone.",
-        "ar": "لعبة اللودو الكلاسيكية بالأحمر والأخضر والأصفر والأزرق: ادعُ أصدقاءك برابط واحد، أو تدرّب ضد الروبوت، أو العب على هاتف واحد."
+        "fa": "همان منچ نوستالژیک با مهره‌های قرمز، سبز، زرد و آبی؛ آنلاین با حریف‌های تازه، با یک لینک با دوستانت، یا روی یک گوشی.",
+        "en": "The classic Ludo board game in red, green, yellow and blue: play online, invite friends with one link, or pass one phone around.",
+        "ar": "لعبة اللودو الكلاسيكية بالأحمر والأخضر والأصفر والأزرق: العب عبر الإنترنت، أو ادعُ أصدقاءك برابط واحد، أو على هاتف واحد."
       },
       "page": {
         "fa": "/mench-app/fa/",
