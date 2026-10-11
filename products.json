@@ -87,6 +87,35 @@
         "en": "https://adadi.espadna.com/?lang=en",
         "ar": "https://adadi.espadna.com/?lang=ar"
       }
+    },
+    {
+      "id": "mafia",
+      "icon": "/mafia-app/icon.png",
+      "kind": {
+        "fa": "ابزار بازی",
+        "en": "Game tool",
+        "ar": "أداة لعب"
+      },
+      "name": {
+        "fa": "گرداننده‌ی مافیا",
+        "en": "Mafia Narrator",
+        "ar": "راوي المافيا"
+      },
+      "desc": {
+        "fa": "مافیای دورهمی را با یک گوشی بگردان: پخش مخفی نقش‌ها، شب و روز قدم‌به‌قدم، تایمر صحبت و شمارش رأی. بدون نیاز به اینترنت.",
+        "en": "Host the Mafia party game with one phone: secret role deal, night and day step by step, talk timer and vote counter. Works offline.",
+        "ar": "أدِر لعبة المافيا بهاتف واحد: توزيع سري للأدوار، الليل والنهار خطوة بخطوة، مؤقت للكلام وعدّاد للأصوات. تعمل دون إنترنت."
+      },
+      "page": {
+        "fa": "/mafia-app/fa/",
+        "en": "/mafia-app/",
+        "ar": "/mafia-app/ar/"
+      },
+      "web": {
+        "fa": "https://mafia.espadna.com/?lang=fa",
+        "en": "https://mafia.espadna.com/?lang=en",
+        "ar": "https://mafia.espadna.com/?lang=ar"
+      }
     }
   ]
 }

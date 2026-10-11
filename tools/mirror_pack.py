@@ -27,6 +27,8 @@ FILE_SITES = {
     'tiaro-app': 'https://espadna.com/tiaro-app',
     'adadi': 'https://adadi.espadna.com',
     'adadi-app': 'https://espadna.com/adadi-app',
+    'mafia': 'https://mafia.espadna.com',
+    'mafia-app': 'https://espadna.com/mafia-app',
 }
 # Web games that do not open in Persian on a .ir address by themselves (Tiaro
 # and Adadi do): their copy gets ?lang=fa unless the link asks for a language.

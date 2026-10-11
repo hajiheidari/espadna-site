@@ -15,6 +15,8 @@
 | `espadna.com/tiaro-app` | `espadna.ir/tiaro-app` | `public_html/tiaro-app` |
 | `adadi.espadna.com` (بازی عددی) | `adadi.espadna.ir` | `public_html/adadi` |
 | `espadna.com/adadi-app` | `espadna.ir/adadi-app` | `public_html/adadi-app` |
+| `mafia.espadna.com` (گرداننده‌ی مافیا) | `mafia.espadna.ir` | `public_html/mafia` |
+| `espadna.com/mafia-app` | `espadna.ir/mafia-app` | `public_html/mafia-app` |
 
 (`public_html` یعنی `/home/USERNAME/domains/espadna.ir/public_html`.)
 
