@@ -135,5 +135,15 @@
     <a href="/fa/">اسپادنا</a> · <a href="/pantomime-app/privacy">حریم خصوصی</a> · ساخته‌شده با ❤️ برای دورهمی‌ها
   </footer>
 </main>
+<script>
+/* Invite link (?i=CODE, shared from the app): report one visit so the
+   sender's special word categories unlock. Link-preview bots run no JS. */
+(function () {
+  var m = /[?&]i=([A-Z2-9]{6,12})(?:&|$)/.exec(location.search);
+  if (!m) return;
+  try { fetch('https://api.espadna.com/invite/' + m[1], { method: 'POST', mode: 'no-cors', keepalive: true }); } catch (e) {}
+  try { history.replaceState(null, '', location.pathname + location.hash); } catch (e) {}
+})();
+</script>
 </body>
 </html>

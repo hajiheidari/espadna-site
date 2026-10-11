@@ -426,7 +426,19 @@ function sync_api(array $site, array $map): string
     if ($privacy !== null && stripos($privacy, '<html') !== false) {
         put_file("$target/privacy.html", strtr($privacy, $map));
     }
-    write_htaccess($target, "RewriteRule ^privacy/?$ privacy.html [L]\n");
+    // Invite link visits (pantomime): a small PHP endpoint, see invite.php.
+    $invite = http_get("$src/invite.php", 30);
+    if ($invite !== null && strpos($invite, '<?php') === 0 && strpos($invite, 'espadna-invite') !== false) {
+        $path = "$target/invite.php";
+        if (!is_file($path) || file_get_contents($path) !== $invite) {
+            put_file($path, $invite);
+            $done[] = 'invite.php';
+        }
+    }
+    write_htaccess(
+        $target,
+        "RewriteRule ^privacy/?$ privacy.html [L]\nRewriteRule ^invite/([A-Z2-9]+)/?$ invite.php?c=$1 [L,QSA]\n"
+    );
     return $done ? implode(', ', $done) : 'up to date';
 }
 

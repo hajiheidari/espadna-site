@@ -151,6 +151,10 @@ def pack_api(out: pathlib.Path) -> str:
             done.append('privacy')
     except Exception as e:
         done.append(f'privacy skipped ({type(e).__name__})')
+    # Invite link endpoint for the Iranian host (sync.php installs it).
+    invite = pathlib.Path(__file__).resolve().parent.parent / 'mirror-ir' / 'invite.php'
+    (folder / 'invite.php').write_bytes(invite.read_bytes())
+    done.append('invite.php')
     return 'api: ' + ', '.join(done)
 
 
