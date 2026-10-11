@@ -87,6 +87,35 @@
         "en": "https://adadi.espadna.com/?lang=en",
         "ar": "https://adadi.espadna.com/?lang=ar"
       }
+    },
+    {
+      "id": "mench",
+      "icon": "/mench-app/icon.png",
+      "kind": {
+        "fa": "بازی",
+        "en": "Game",
+        "ar": "لعبة"
+      },
+      "name": {
+        "fa": "منچ",
+        "en": "Mench",
+        "ar": "منچ (لودو)"
+      },
+      "desc": {
+        "fa": "همان منچ نوستالژیک با مهره‌های قرمز، سبز، زرد و آبی؛ با یک لینک دوستانت را دعوت کن، با ربات تمرین کن یا روی یک گوشی بازی کنید.",
+        "en": "The classic Ludo board game in red, green, yellow and blue: invite friends with one link, practice against the bot or play on one phone.",
+        "ar": "لعبة اللودو الكلاسيكية بالأحمر والأخضر والأصفر والأزرق: ادعُ أصدقاءك برابط واحد، أو تدرّب ضد الروبوت، أو العب على هاتف واحد."
+      },
+      "page": {
+        "fa": "/mench-app/fa/",
+        "en": "/mench-app/",
+        "ar": "/mench-app/ar/"
+      },
+      "web": {
+        "fa": "https://mench.espadna.com/?lang=fa",
+        "en": "https://mench.espadna.com/?lang=en",
+        "ar": "https://mench.espadna.com/?lang=en"
+      }
     }
   ]
 }
