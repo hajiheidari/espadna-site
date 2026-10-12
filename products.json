@@ -116,6 +116,35 @@
         "en": "https://mafia.espadna.com/?lang=en",
         "ar": "https://mafia.espadna.com/?lang=ar"
       }
+    },
+    {
+      "id": "mench",
+      "icon": "/mench-app/icon.png",
+      "kind": {
+        "fa": "بازی",
+        "en": "Game",
+        "ar": "لعبة"
+      },
+      "name": {
+        "fa": "بازی منچ دوستانه",
+        "en": "Ludo Dosti",
+        "ar": "Ludo Dosti"
+      },
+      "desc": {
+        "fa": "همان منچ نوستالژیک با مهره‌های قرمز، سبز، زرد و آبی؛ بازی آنلاین رقابتی، دعوت دوستان با یک لینک، یا بازی چندنفره روی یک گوشی.",
+        "en": "The classic Ludo board game in red, green, yellow and blue: play online, invite friends with one link, or pass one phone around.",
+        "ar": "لعبة اللودو الكلاسيكية بالأحمر والأخضر والأصفر والأزرق: العب عبر الإنترنت، أو ادعُ أصدقاءك برابط واحد، أو على هاتف واحد."
+      },
+      "page": {
+        "fa": "/mench-app/fa/",
+        "en": "/mench-app/",
+        "ar": "/mench-app/ar/"
+      },
+      "web": {
+        "fa": "https://mench.espadna.com/?lang=fa",
+        "en": "https://mench.espadna.com/?lang=en",
+        "ar": "https://mench.espadna.com/?lang=en"
+      }
     }
   ]
 }

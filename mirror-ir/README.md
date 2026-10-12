@@ -17,6 +17,8 @@
 | `espadna.com/adadi-app` | `espadna.ir/adadi-app` | `public_html/adadi-app` |
 | `mafia.espadna.com` (گرداننده‌ی مافیا) | `mafia.espadna.ir` | `public_html/mafia` |
 | `espadna.com/mafia-app` | `espadna.ir/mafia-app` | `public_html/mafia-app` |
+| `mench.espadna.com` (بازی منچ دوستانه) | `mench.espadna.ir` | `public_html/mench` |
+| `espadna.com/mench-app` | `espadna.ir/mench-app` | `public_html/mench-app` |
 
 (`public_html` یعنی `/home/USERNAME/domains/espadna.ir/public_html`.)
 

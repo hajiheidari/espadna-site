@@ -21,6 +21,7 @@ the espadna.com zone (a route wins over this site). Only their card in
 | Pantomime | this repo (`public/pantomime-app/`) | hajiheidari/pantomime (game) |
 | Adadi | Worker `adadi` (route `espadna.com/adadi-app*`) | hajiheidari/math-game (`site/adadi-app/`) |
 | Mafia Narrator | Worker `mafia-app` (route `espadna.com/mafia-app*`) | hajiheidari/mafia (`web/landing/mafia-app/`) |
+| Ludo Dosti (منچ) | Worker `mench` (route `espadna.com/mench-app*`, game `mench.espadna.com`) | hajiheidari/mench (`apps/edge/site/mench-app/`) |
 
 English is always the root of a section; Persian and Arabic live in `fa/` and `ar/`.
 
