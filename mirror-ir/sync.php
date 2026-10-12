@@ -404,7 +404,11 @@ function sync_api(array $site, array $map): string
     $src = rtrim($site['source'], '/');
     $target = rtrim($site['target'], '/');
     $done = [];
-    foreach (['config.json' => 'config_version', 'words_fa.json' => 'version'] as $file => $key) {
+    $files = ['config.json' => 'config_version'];
+    foreach (['fa', 'en', 'ar', 'ru', 'tr'] as $lang) {
+        $files["words_$lang.json"] = 'version';
+    }
+    foreach ($files as $file => $key) {
         $raw = http_get("$src/$file", 30);
         $new = json_version($raw, $key);
         if ($new === null) {

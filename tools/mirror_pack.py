@@ -37,7 +37,7 @@ FILE_SITES = {
 # The player's saved choice in the game still wins.
 PERSIAN_GAMES = {'pantomime'}
 API = 'https://api.espadna.com'
-API_JSON = {'config.json': 'config_version', 'words_fa.json': 'version'}
+API_JSON = {'config.json': 'config_version', **{f'words_{l}.json': 'version' for l in ('fa', 'en', 'ar', 'ru', 'tr')}}
 
 
 def get(url: str) -> bytes:
