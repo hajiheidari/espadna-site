@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Pantomime Party | Charades game in your browser</title>
-  <meta name="description" content="Pantomime Party: the charades game for friends and family. 800+ words, classic and speed charades plus heads-up style forehead mode. No install, works offline.">
+  <title>Dorehami Pantomime | Charades game in your browser</title>
+  <meta name="description" content="Dorehami Pantomime: the charades game for friends and family. 800+ words, classic and speed charades plus heads-up style forehead mode. No install, works offline.">
   <meta name="keywords" content="charades, charades game, heads up game, party game, pantomime, guess the word, family game, online charades">
   <meta name="theme-color" content="#1A0F3D">
   <link rel="canonical" href="https://espadna.com/pantomime-app/">
@@ -16,22 +16,22 @@
   <link rel="apple-touch-icon" href="/pantomime-app/icon.png">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="en_US">
-  <meta property="og:site_name" content="Pantomime Party">
-  <meta property="og:title" content="Pantomime Party 🎭 Act it out, laugh out loud!">
+  <meta property="og:site_name" content="Dorehami Pantomime">
+  <meta property="og:title" content="Dorehami Pantomime 🎭 Act it out, laugh out loud!">
   <meta property="og:description" content="The charades game for parties. Play right now in your browser, no install.">
   <meta property="og:url" content="https://espadna.com/pantomime-app/">
   <meta property="og:image" content="https://espadna.com/pantomime-app/og_en.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Pantomime Party 🎭">
+  <meta name="twitter:title" content="Dorehami Pantomime 🎭">
   <meta name="twitter:description" content="The charades game for parties. No install, in your browser.">
   <meta name="twitter:image" content="https://espadna.com/pantomime-app/og_en.png">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "VideoGame",
-    "name": "Pantomime Party",
+    "name": "Dorehami Pantomime",
     "description": "Charades party game",
     "inLanguage": ["en", "fa", "ar"],
     "genre": ["Party game", "Charades"],
@@ -78,8 +78,14 @@
     details:last-child { border-bottom: 0; }
     summary { cursor: pointer; font-weight: 800; }
     #install { display: none; margin: 18px auto 0; background: var(--yellow); color: var(--ink); border: 3px solid var(--ink); border-radius: 999px; padding: 10px 22px; font: inherit; font-weight: 900; font-size: 18px; box-shadow: 0 5px 0 var(--ink); cursor: pointer; }
-    .stores { display: none; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
-    .stores a { color: var(--ink); background: #fff; border: 3px solid var(--ink); border-radius: 14px; padding: 8px 16px; font-weight: 900; text-decoration: none; }
+    .stores { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
+    .store { display: inline-flex; align-items: center; gap: 10px; min-width: 200px; color: #fff; background: #000; border: 3px solid var(--ink); border-radius: 16px; padding: 8px 18px 8px 14px; text-decoration: none; box-shadow: 0 5px 0 var(--ink); text-align: start; line-height: 1.25; }
+    .store:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); }
+    .store svg { width: 34px; height: 34px; flex: none; }
+    .store small { display: block; font-size: 12px; font-weight: 700; opacity: .8; }
+    .store b { display: block; font-size: 20px; font-weight: 900; }
+    .apk-note { text-align: center; color: var(--muted); font-size: 14px; margin: 10px 0 0; }
+    .apk-note a { color: var(--muted); }
     .lang { text-align: end; } .lang a { color: var(--muted); font-weight: 800; text-decoration: none; border: 2px solid rgba(255,255,255,.2); border-radius: 999px; padding: 2px 14px; }
     footer { text-align: center; color: var(--muted); font-size: 14px; margin-top: 48px; }
     footer a { color: var(--muted); }
@@ -91,15 +97,19 @@
 <main>
   <nav class="lang"><a href="/pantomime-app/fa/" hreflang="fa" lang="fa">فارسی</a> <a href="/pantomime-app/ar/" hreflang="ar" lang="ar">العربية</a></nav>
   <section class="hero">
-    <img src="/pantomime-app/icon.png" alt="Pantomime Party logo" width="132" height="132">
-    <h1>Pantomime Party</h1>
+    <img src="/pantomime-app/icon.png" alt="Dorehami Pantomime logo" width="132" height="132">
+    <h1>Dorehami Pantomime</h1>
     <p class="tag">Act it out, laugh out loud! 🎭</p>
     <a class="play" href="https://pantomime.espadna.com/?lang=en">▶️ Play now<small>No install, right here in your browser</small></a>
-    <div class="stores" id="stores"><!-- store links, shown when published --></div>
+    <div class="stores">
+      <a class="store" href="https://apps.apple.com/app/id6821363120"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.37 1.43c0 1.14-.5 2.27-1.18 3.08-.74.9-1.99 1.57-2.99 1.57-.12 0-.23-.02-.3-.03-.01-.06-.04-.22-.04-.39 0-1.15.57-2.27 1.2-2.98.81-.94 2.15-1.64 3.25-1.68.03.13.06.28.06.43zm4.56 15.71c-.03.07-.46 1.58-1.52 3.12-.94 1.34-1.94 2.71-3.43 2.71-1.52 0-1.9-.88-3.63-.88-1.7 0-2.3.91-3.67.91-1.38 0-2.33-1.26-3.43-2.8C4 18.38 2.96 15.57 2.96 12.92c0-4.28 2.8-6.55 5.55-6.55 1.45 0 2.68.95 3.6.95.87 0 2.22-1.01 3.9-1.01.62 0 2.89.06 4.38 2.19-.13.09-2.39 1.37-2.39 4.19 0 3.26 2.86 4.42 2.96 4.45z"/></svg><span><small>Download on the</small><b>App Store</b></span></a>
+      <a class="store" href="/pantomime-app/download/dorehami-pantomime.apk" download><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#3DDC84" d="M17.6 9.48l1.84-3.18a.63.63 0 0 0-1.09-.63l-1.88 3.24a11.4 11.4 0 0 0-8.94 0L5.65 5.67a.64.64 0 0 0-1.09.63L6.4 9.48A10.8 10.8 0 0 0 1 18h22a10.8 10.8 0 0 0-5.4-8.52zM7 15.25a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5zm10 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5z"/></svg><span><small>Download for Android</small><b>APK file</b></span></a>
+    </div>
+    <p class="apk-note">Android: direct download (21 MB). The game starts in Persian; switch to English in Settings ⚙️. Older phone? <a href="/pantomime-app/download/dorehami-pantomime-32bit.apk" download>32-bit version</a>.</p>
   </section>
 
   <section class="grid" aria-label="Features">
-    <div class="feat"><b>📚</b><span>800+ words · English, Persian, Arabic</span></div>
+    <div class="feat"><b>📚</b><span>800+ words · 5 languages</span></div>
     <div class="feat"><b>👥</b><span>Classic or speed charades, 2–4 teams</span></div>
     <div class="feat"><b>🤳</b><span>Phone-on-forehead mode</span></div>
     <div class="feat"><b>📴</b><span>Works offline after the first visit</span></div>
