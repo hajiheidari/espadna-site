@@ -22,6 +22,7 @@ the espadna.com zone (a route wins over this site). Only their card in
 | Adadi | Worker `adadi` (route `espadna.com/adadi-app*`) | hajiheidari/math-game (`site/adadi-app/`) |
 | Mafia Narrator | Worker `mafia-app` (route `espadna.com/mafia-app*`) | hajiheidari/mafia (`web/landing/mafia-app/`) |
 | Ludo Dosti (منچ) | Worker `mench` (route `espadna.com/mench-app*`, game `mench.espadna.com`) | hajiheidari/mench (`apps/edge/site/mench-app/`) |
+| Shah, Thief & Minister (شاه دزد وزیر) | Worker `shahdozd-app` (route `espadna.com/shahdozd-app*`, game `shahdozd.espadna.com`) | hajiheidari/shah-dozd (`tools/landing.py`) |
 
 English is always the root of a section; Persian and Arabic live in `fa/` and `ar/`.
 

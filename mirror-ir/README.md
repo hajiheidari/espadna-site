@@ -19,6 +19,8 @@
 | `espadna.com/mafia-app` | `espadna.ir/mafia-app` | `public_html/mafia-app` |
 | `mench.espadna.com` (بازی منچ دوستانه) | `mench.espadna.ir` | `public_html/mench` |
 | `espadna.com/mench-app` | `espadna.ir/mench-app` | `public_html/mench-app` |
+| `shahdozd.espadna.com` (شاه دزد وزیر) | `shahdozd.espadna.ir` | `public_html/shahdozd` |
+| `espadna.com/shahdozd-app` | `espadna.ir/shahdozd-app` | `public_html/shahdozd-app` |
 
 (`public_html` یعنی `/home/USERNAME/domains/espadna.ir/public_html`.)
 

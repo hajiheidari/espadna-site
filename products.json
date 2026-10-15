@@ -145,6 +145,35 @@
         "en": "https://mench.espadna.com/?lang=en",
         "ar": "https://mench.espadna.com/?lang=en"
       }
+    },
+    {
+      "id": "shahdozd",
+      "icon": "/shahdozd-app/icon.png",
+      "kind": {
+        "fa": "بازی",
+        "en": "Game",
+        "ar": "لعبة"
+      },
+      "name": {
+        "fa": "شاه، دزد، وزیر",
+        "en": "Shah, Thief & Minister",
+        "ar": "الشاه واللص والوزير"
+      },
+      "desc": {
+        "fa": "همان شاه دزد وزیرِ دورهمی‌ها با یک گوشی: نقش‌های مخفی، چهار حالت برای ۴ تا ۶ نفر با دلقک و دو دزد، بدون اینترنت و بدون تبلیغ.",
+        "en": "The classic secret-role party game of Iran and India for one phone: four modes for 4 to 6 players, with a Joker and two thieves. Offline, no ads.",
+        "ar": "لعبة الأدوار السرية الكلاسيكية للتجمعات على هاتف واحد: أربعة أوضاع من ٤ إلى ٦ لاعبين، مع المهرّج ولصّين. تعمل دون إنترنت ودون إعلانات."
+      },
+      "page": {
+        "fa": "/shahdozd-app/fa/",
+        "en": "/shahdozd-app/",
+        "ar": "/shahdozd-app/"
+      },
+      "web": {
+        "fa": "https://shahdozd.espadna.com/?lang=fa",
+        "en": "https://shahdozd.espadna.com/?lang=en",
+        "ar": "https://shahdozd.espadna.com/?lang=en"
+      }
     }
   ]
 }
