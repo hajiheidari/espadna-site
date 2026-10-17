@@ -1,0 +1,68 @@
+{
+ "sites": [
+  {
+   "name": "pantomime",
+   "kind": "subdomain",
+   "sub": "pantomime",
+   "spa": true
+  },
+  {
+   "name": "tiaro",
+   "kind": "subdomain",
+   "sub": "tiaro",
+   "spa": true
+  },
+  {
+   "name": "tiaro-app",
+   "kind": "folder",
+   "path": "tiaro-app"
+  },
+  {
+   "name": "adadi",
+   "kind": "subdomain",
+   "sub": "adadi",
+   "spa": true
+  },
+  {
+   "name": "adadi-app",
+   "kind": "folder",
+   "path": "adadi-app"
+  },
+  {
+   "name": "mafia",
+   "kind": "subdomain",
+   "sub": "mafia",
+   "spa": true
+  },
+  {
+   "name": "mafia-app",
+   "kind": "folder",
+   "path": "mafia-app"
+  },
+  {
+   "name": "mench",
+   "kind": "subdomain",
+   "sub": "mench",
+   "spa": true
+  },
+  {
+   "name": "mench-app",
+   "kind": "folder",
+   "path": "mench-app"
+  },
+  {
+   "name": "shahdozd",
+   "kind": "subdomain",
+   "sub": "shahdozd",
+   "spa": true
+  },
+  {
+   "name": "shahdozd-app",
+   "kind": "folder",
+   "path": "shahdozd-app"
+  }
+ ],
+ "sync_php": {
+  "sha256": "264615f0701c43b9e0e0ac617b46c678774a48e8e420c47ab155a8621f29ba1e"
+ }
+}
