@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>تست سرعت پانتومیم</title>
+<meta name="robots" content="noindex">
+<style>
+  body { margin: 0; padding: 16px; font: 15px/1.7 Tahoma, sans-serif; background: #1A0F3D; color: #fff; }
+  h1 { font-size: 20px; margin: 0 0 8px; color: #FFD23F; }
+  table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 13px; direction: ltr; }
+  th, td { border-bottom: 1px solid #3a2d6b; padding: 6px 4px; text-align: left; }
+  .ok { color: #3DDC84; } .bad { color: #FF5C9A; } .wait { color: #C9BFF2; }
+  button { font: inherit; font-weight: 700; padding: 10px 18px; border-radius: 10px; border: 0; background: #FFD23F; color: #120A2B; }
+  p { color: #C9BFF2; }
+</style>
+</head>
+<body>
+<h1>تست سرعت دانلود فایل‌های بازی</h1>
+<p>این صفحه فایل‌های اصلی بازی را از دو آدرس دانلود می‌کند و زمانش را نشان می‌دهد. بعد از تمام شدن، از صفحه اسکرین‌شات بگیرید.</p>
+<button id="go">شروع تست</button>
+<table><thead><tr><th>host</th><th>file</th><th>size</th><th>time</th><th>speed</th></tr></thead><tbody id="out"></tbody></table>
+<script>
+const hosts = [
+  ['new', 'https://pantomime.espadna.com'],
+  ['old', 'https://pantomime.sepanta-hesaban.workers.dev'],
+  ['api', 'https://api.espadna.com'],
+];
+const files = ['/index.html', '/flutter_bootstrap.js', '/main.dart.js', '/canvaskit/canvaskit.wasm'];
+const out = document.getElementById('out');
+function row(h, f) {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td>${h}</td><td>${f}</td><td>…</td><td class="wait">waiting</td><td></td>`;
+  out.appendChild(tr);
+  return tr.children;
+}
+async function test(name, base, file) {
+  const c = row(name, file);
+  const t0 = performance.now();
+  const ctl = new AbortController();
+  const timer = setTimeout(() => ctl.abort(), 60000);
+  try {
+    const res = await fetch(base + file + '?t=' + Date.now(), { cache: 'no-store', signal: ctl.signal });
+    const buf = await res.arrayBuffer();
+    const s = (performance.now() - t0) / 1000;
+    c[2].textContent = (buf.byteLength / 1024).toFixed(0) + ' KB';
+    c[3].textContent = s.toFixed(1) + ' s';
+    c[3].className = res.ok ? (s < 5 ? 'ok' : 'bad') : 'bad';
+    if (!res.ok) c[3].textContent += ' HTTP ' + res.status;
+    c[4].textContent = (buf.byteLength / 1024 / s).toFixed(0) + ' KB/s';
+  } catch (e) {
+    c[3].textContent = ((performance.now() - t0) / 1000).toFixed(1) + ' s ✗ ' + (e.name === 'AbortError' ? 'timeout' : e.message);
+    c[3].className = 'bad';
+  } finally { clearTimeout(timer); }
+}
+document.getElementById('go').onclick = async () => {
+  out.textContent = '';
+  for (const [n, b] of hosts) {
+    if (n === 'api') { await test(n, b, '/config.json'); await test(n, b, '/words_fa.json'); continue; }
+    for (const f of files) await test(n, b, f);
+  }
+};
+</script>
+</body>
+</html>

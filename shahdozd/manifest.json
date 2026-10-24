@@ -1,0 +1,22 @@
+{
+  "name": "شاه، دزد، وزیر — Shah, Thief & Minister",
+  "short_name": "شاه دزد وزیر",
+  "id": "/",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0C0F2A",
+  "theme_color": "#0C0F2A",
+  "description": "بازی دورهمی شاه دزد وزیر با یک گوشی، بدون اینترنت و بدون تبلیغ. The party game for one phone, offline, no ads.",
+  "lang": "fa",
+  "dir": "rtl",
+  "orientation": "any",
+  "categories": ["games", "entertainment"],
+  "prefer_related_applications": false,
+  "icons": [
+    { "src": "icons/Icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/Icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/Icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/Icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
