@@ -1,0 +1,13 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["RGR5G6VN69.com.espadna.tiaro"],
+        "components": [
+          { "/": "/c/*", "comment": "Challenge links" },
+          { "/": "/", "?": { "r": "?*" }, "comment": "Invite links" }
+        ]
+      }
+    ]
+  }
+}
