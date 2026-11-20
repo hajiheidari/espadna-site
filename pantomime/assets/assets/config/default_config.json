@@ -1,0 +1,20 @@
+{
+  "config_version": 0,
+  "ads": {
+    "enabled": true,
+    "active_provider": { "play": "adivery", "bazaar": "adivery", "myket": "adivery", "ios": "admob" },
+    "ab_split": null,
+    "fallback_chain": {
+      "play": ["adivery", "tapsell", "admob"],
+      "bazaar": ["adivery", "tapsell"],
+      "myket": ["adivery", "tapsell"],
+      "ios": ["admob"]
+    },
+    "providers": {},
+    "interstitial_every_n_rounds": 3,
+    "banner_on_home": true,
+    "rewarded_enabled": true
+  },
+  "min_supported_version": "1.0.0",
+  "message": null
+}

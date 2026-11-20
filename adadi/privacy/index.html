@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Adadi — Privacy Policy</title>
+<!-- Source text: docs/privacy-policy.md. Keep both in sync. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root { --fg:#1d2733; --muted:#5a6878; --bg:#f7f9fc; --card:#fff; --accent:#2f5d8a; --line:#dde4ee; }
+  @media (prefers-color-scheme: dark) {
+    :root { --fg:#e6edf5; --muted:#9fb0c3; --bg:#11161d; --card:#1a212b; --accent:#8db8e6; --line:#2b3542; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+         font:16px/1.7 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width:760px; margin:0 auto; padding:24px 16px 64px; }
+  nav { display:flex; gap:8px; justify-content:flex-end; margin-bottom:16px; }
+  nav a { color:var(--accent); text-decoration:none; border:1px solid var(--line);
+          border-radius:999px; padding:4px 14px; font-size:14px; }
+  article { background:var(--card); border:1px solid var(--line); border-radius:16px;
+            padding:8px 24px 24px; margin-bottom:24px; }
+  [dir=rtl] { font-family: Vazirmatn, Tahoma, sans-serif; }
+  h1 { font-size:26px; line-height:1.3; margin:20px 0 4px; }
+  h2 { font-size:18px; margin:28px 0 6px; color:var(--accent); }
+  .updated { color:var(--muted); font-size:14px; margin:0 0 12px; }
+  ul { padding-inline-start:22px; }
+  li { margin:4px 0; }
+  a { color:var(--accent); overflow-wrap:anywhere; }
+  .ltr { direction:ltr; unicode-bidi:embed; }
+</style>
+</head>
+<body>
+<main>
+<nav><a href="#en">English</a><a href="#fa" lang="fa">فارسی</a></nav>
+
+<article id="en" lang="en" dir="ltr">
+<h1>Adadi — Privacy Policy</h1>
+<p class="updated">Last updated: October 14, 2026</p>
+<p>Adadi (“the app”) is a math puzzle game for people aged 13 and over, published by Amir HajiHeidari (“we”, “us”). This policy explains what information the app handles and why.</p>
+
+<h2>Summary</h2>
+<ul>
+<li>No accounts, no analytics. The app is free in every version and has no purchases.</li>
+<li>The App Store, Google Play and web versions show <b>no ads</b>. The Cafe Bazaar version (Iran) offers optional rewarded videos by Adivery (see below).</li>
+<li>Hints cost coins. Coins come from friends: when a friend opens a challenge or invitation you shared, our server counts it using random codes, never your name or contacts.</li>
+<li>Your progress can be backed up: under a random recovery code on our server, in your iCloud (iPhone, iPad) and in your Google backup (Android).</li>
+</ul>
+
+<h2>Information stored on your device</h2>
+<ul>
+<li><b>Age group</b> (13–15, 16–17 or 18+). The app asks your age once to choose suitable puzzles. Only the resulting age group is saved; your age or birth date is never stored or sent anywhere.</li>
+<li>If an age under 13 is entered, the app stores only a flag that blocks play, and nothing else, and makes no backup.</li>
+<li><b>Game progress:</b> levels completed, stars, daily puzzles solved, streaks, unfinished puzzles, coins and certificates.</li>
+<li><b>Name on certificates</b>, only if you type one (any name or nickname you like).</li>
+<li><b>Settings:</b> language, digit style, sound and vibration on/off, whether the tutorial was completed.</li>
+<li>Random codes used for coins from friends and for the backup (below).</li>
+</ul>
+<p>Deleting the app, or clearing its data, deletes all of this from the device (copies in a backup remain, see “Backup”).</p>
+
+<h2>Challenges and coins from friends</h2>
+<p>Each copy of the app makes a random secret, and from it a short random invite code (for example <span class="ltr">k3xq8mzt2a</span>). The links you share contain this code and, for a challenge, which puzzle you solved and your time. When a friend opens such a link in the web game, it sends our server your code and the friend’s own random code, so that you get a coin. To count each friend only once a day, the server also keeps a one-way (salted) hash of the friend’s IP address; it never stores the IP address itself. When your app collects its coins, it sends the secret, and your IP address is handled the same way. These records are deleted after 2 days; the server only keeps, per invite code, how many coins are waiting to be collected (at most 9).</p>
+<p>The codes are random and are not linked to your name, phone number, contacts or device identifiers. We never see whom you send links to: sharing happens through your phone’s own share sheet. The server runs on Cloudflare.</p>
+
+<h2>Backup</h2>
+<ul>
+<li><b>Recovery code:</b> the app keeps a copy of the game data listed above (progress, settings, the optional certificate name and the random codes; never your age) on our server, under a random 12-character code shown in Settings → Backup. Entering the code on another phone or in the web game brings your progress back. Anyone who has the code can restore that copy, so keep it to yourself. A copy is deleted 400 days after it was last updated, or earlier if you email us the code and ask.</li>
+<li><b>iCloud</b> (iPhone, iPad): a copy of the same data is kept in your own iCloud account (key-value storage), so it comes back after reinstalling and on your other Apple devices. Apple’s privacy policy applies; turning iCloud off for the app stops it.</li>
+<li><b>Google backup</b> (Android): if backup is on in your phone’s settings, Android includes the app’s data in your Google backup. Google’s privacy policy applies.</li>
+</ul>
+
+<h2>Game Center (iPhone, iPad)</h2>
+<p>If you are signed in to Apple Game Center, the app sends your best daily streak, the number of levels completed and your total stars to Game Center leaderboards. Your Game Center name is managed by Apple and is not stored by us. Apple’s privacy policy applies.</p>
+
+<h2>Cafe Bazaar version</h2>
+<p>The version of the app from Cafe Bazaar (Iran) offers rewarded videos by <b>Adivery</b>: only when you choose to watch one, for a coin. Adivery may collect device information such as the advertising ID and IP address to show and measure ads; see <a href="https://adivery.com">Adivery’s privacy policy</a>. There are no other ads and nothing to buy.</p>
+
+<h2>What we do not do</h2>
+<p>The app has no accounts, no sign-in, no analytics or crash reporting, no chat, and no location access. It does not read your contacts. We do not sell, rent or share personal information, and we do not knowingly collect personal information from anyone.</p>
+
+<h2>Children</h2>
+<p>The app is not intended for children under 13. It blocks play when an age under 13 is entered and stores nothing about that person except the block. If you believe a child under 13 is using the app, deleting the app removes everything it stored on the device; email us a recovery code to delete a backup.</p>
+
+<h2>Your rights</h2>
+<p>We hold no personal data that identifies you: backups are kept under random codes, and the friend records are random codes deleted after 2 days. You can ask us to delete a backup by sending its recovery code. For questions, write to us (below).</p>
+
+<h2>Changes to this policy</h2>
+<p>If the app changes how it handles information, we will update this page and the “Last updated” date above.</p>
+
+<h2>Contact</h2>
+<p>Questions about this policy: <a href="mailto:espadna.support@gmail.com">espadna.support@gmail.com</a></p>
+</article>
+
+<article id="fa" lang="fa" dir="rtl">
+<h1>سیاست حریم خصوصی عددی (Adadi)</h1>
+<p class="updated">آخرین به‌روزرسانی: ۲۲ مهر ۱۴۰۵ (۱۴ اکتبر ۲۰۲۶)</p>
+<p>عددی («برنامه») یک بازی پازل ریاضی برای افراد ۱۳ سال به بالاست که توسط امیر حاجی‌حیدری (Amir HajiHeidari) («ما») منتشر شده است. این متن توضیح می‌دهد برنامه با چه اطلاعاتی سروکار دارد و چرا.</p>
+
+<h2>خلاصه</h2>
+<ul>
+<li>حساب کاربری و ابزار آمارگیری نداریم. برنامه در همهٔ نسخه‌ها رایگان است و هیچ خریدی ندارد.</li>
+<li>نسخه‌های App Store، Google Play و وب <b>تبلیغ ندارند</b>. نسخهٔ کافه بازار فقط ویدیوی جایزه‌دار ادیوری دارد که خودتان انتخاب می‌کنید ببینید (پایین‌تر).</li>
+<li>هر راهنما یک سکه است. سکه از دوستان می‌آید: وقتی دوستی چالش یا دعوتی را که فرستاده‌اید باز کند، سرور ما آن را با کدهای تصادفی می‌شمارد، نه با نام یا مخاطبان شما.</li>
+<li>از پیشرفت شما پشتیبان گرفته می‌شود: با یک کد بازیابی تصادفی روی سرور ما، در iCloud شما (آیفون و آیپد) و در پشتیبان گوگل شما (اندروید).</li>
+</ul>
+
+<h2>اطلاعاتی که روی دستگاه شما ذخیره می‌شود</h2>
+<ul>
+<li><b>گروه سنی</b> (۱۳ تا ۱۵، ۱۶ تا ۱۷ یا ۱۸ به بالا). برنامه یک بار سن شما را می‌پرسد تا پازل‌های مناسب انتخاب شود. فقط گروه سنی ذخیره می‌شود؛ سن یا تاریخ تولد شما هرگز ذخیره یا به جایی ارسال نمی‌شود.</li>
+<li>اگر سنی کمتر از ۱۳ سال وارد شود، برنامه فقط یک علامت برای جلوگیری از بازی ذخیره می‌کند و هیچ چیز دیگری، و پشتیبانی هم نمی‌گیرد.</li>
+<li><b>پیشرفت بازی:</b> مراحل تمام‌شده، ستاره‌ها، پازل‌های روزانهٔ حل‌شده، روزهای پیاپی، بازی‌های نیمه‌تمام، سکه‌ها و گواهی‌نامه‌ها.</li>
+<li><b>نام روی گواهی‌نامه</b>، فقط اگر خودتان بنویسید (هر نام یا لقبی که بخواهید).</li>
+<li><b>تنظیمات:</b> زبان، نوع ارقام، روشن یا خاموش بودن صدا و لرزش، و اینکه آموزش بازی دیده شده یا نه.</li>
+<li>کدهای تصادفی برای سکه از دوستان و برای پشتیبان (پایین‌تر).</li>
+</ul>
+<p>با حذف برنامه یا پاک کردن داده‌های آن، همهٔ این اطلاعات از دستگاه پاک می‌شود (نسخهٔ پشتیبان می‌ماند؛ بخش «پشتیبان»).</p>
+
+<h2>چالش و سکه از دوستان</h2>
+<p>هر نسخه از برنامه یک رمز تصادفی می‌سازد و از روی آن یک کد دعوت کوتاه و تصادفی (مثلاً <span class="ltr">k3xq8mzt2a</span>). لینک‌هایی که می‌فرستید این کد را دارند و در چالش، اینکه کدام پازل را حل کرده‌اید و زمان شما. وقتی دوستی چنین لینکی را در نسخهٔ وب بازی باز کند، بازی کد شما و کد تصادفی خود او را برای سرور ما می‌فرستد تا یک سکه به شما برسد. برای اینکه هر دوست در هر روز فقط یک بار شمرده شود، سرور یک «هش» یک‌طرفه (نمک‌زده) از نشانی IP دوست نگه می‌دارد و خود نشانی IP را هرگز ذخیره نمی‌کند. وقتی برنامهٔ شما سکه‌هایش را می‌گیرد، رمز را می‌فرستد و با نشانی IP شما هم همین‌طور رفتار می‌شود. این سوابق بعد از ۲ روز پاک می‌شوند؛ سرور برای هر کد دعوت فقط تعداد سکه‌های منتظر را نگه می‌دارد (حداکثر ۹).</p>
+<p>این کدها تصادفی‌اند و به نام، شماره تلفن، مخاطبان یا شناسه‌های دستگاه شما ربطی ندارند. ما هرگز نمی‌بینیم لینک را برای چه کسی می‌فرستید: ارسال با منوی اشتراک‌گذاری خود گوشی انجام می‌شود. سرور روی Cloudflare اجرا می‌شود.</p>
+
+<h2>پشتیبان</h2>
+<ul>
+<li><b>کد بازیابی:</b> برنامه یک نسخه از داده‌های بالا (پیشرفت، تنظیمات، نام اختیاری گواهی‌نامه و کدهای تصادفی؛ هرگز سن شما) را روی سرور ما با یک کد تصادفی ۱۲ حرفی نگه می‌دارد که در تنظیمات ← پشتیبان نشان داده می‌شود. با وارد کردن این کد روی گوشی دیگر یا در نسخهٔ وب، پیشرفتتان برمی‌گردد. هر کس این کد را داشته باشد می‌تواند آن نسخه را بازیابی کند، پس آن را پیش خودتان نگه دارید. هر نسخه ۴۰۰ روز بعد از آخرین به‌روزرسانی پاک می‌شود، یا زودتر اگر کد را برای ما ایمیل کنید و بخواهید.</li>
+<li><b>iCloud</b> (آیفون و آیپد): نسخه‌ای از همین داده‌ها در حساب iCloud خود شما نگه داشته می‌شود تا بعد از نصب دوباره و روی دیگر دستگاه‌های اپل‌تان برگردد. سیاست حریم خصوصی اپل اعمال می‌شود؛ با خاموش کردن iCloud برای برنامه متوقف می‌شود.</li>
+<li><b>پشتیبان گوگل</b> (اندروید): اگر پشتیبان‌گیری در تنظیمات گوشی روشن باشد، اندروید داده‌های برنامه را در پشتیبان گوگل شما قرار می‌دهد. سیاست حریم خصوصی گوگل اعمال می‌شود.</li>
+</ul>
+
+<h2>گیم سنتر (آیفون و آیپد)</h2>
+<p>اگر وارد Game Center اپل شده باشید، برنامه بهترین تعداد روزهای پیاپی، تعداد مراحل تمام‌شده و مجموع ستاره‌های شما را به جدول‌های رتبهٔ Game Center می‌فرستد. نام شما در Game Center را اپل مدیریت می‌کند و ما آن را ذخیره نمی‌کنیم. سیاست حریم خصوصی اپل اعمال می‌شود.</p>
+
+<h2>نسخه‌ی کافه بازار</h2>
+<p>نسخه‌ای که از کافه بازار نصب می‌شود ویدیوی جایزه‌دار <b>ادیوری (Adivery)</b> دارد: فقط وقتی خودتان بخواهید و در ازای یک سکه. ادیوری ممکن است برای نمایش و اندازه‌گیری تبلیغات، اطلاعاتی مانند شناسه‌ی تبلیغاتی دستگاه و نشانی IP را جمع‌آوری کند؛ <a href="https://adivery.com">سیاست حریم خصوصی ادیوری</a> را ببینید. تبلیغ دیگری ندارد و چیزی هم برای خرید ندارد.</p>
+
+<h2>کارهایی که انجام نمی‌دهیم</h2>
+<p>برنامه حساب کاربری، ورود، ابزار آمارگیری یا گزارش خطا، گفت‌وگو و دسترسی به موقعیت مکانی ندارد و مخاطبان شما را نمی‌خواند. ما اطلاعات شخصی را نمی‌فروشیم، اجاره نمی‌دهیم یا با کسی به اشتراک نمی‌گذاریم و آگاهانه از هیچ‌کس اطلاعات شخصی جمع‌آوری نمی‌کنیم.</p>
+
+<h2>کودکان</h2>
+<p>این برنامه برای کودکان زیر ۱۳ سال نیست. اگر سنی کمتر از ۱۳ سال وارد شود، بازی مسدود می‌شود و جز همین علامت هیچ اطلاعاتی از آن فرد ذخیره نمی‌شود. اگر فکر می‌کنید کودکی زیر ۱۳ سال از برنامه استفاده می‌کند، با حذف برنامه همهٔ داده‌های روی دستگاه پاک می‌شود؛ برای پاک کردن پشتیبان، کد بازیابی را برای ما ایمیل کنید.</p>
+
+<h2>حقوق شما</h2>
+<p>ما هیچ دادهٔ شخصی‌ای که شما را شناسایی کند نگه نمی‌داریم: پشتیبان‌ها با کدهای تصادفی نگه داشته می‌شوند و سوابق دوستان کدهای تصادفی‌اند که بعد از ۲ روز پاک می‌شوند. با فرستادن کد بازیابی می‌توانید پاک شدن پشتیبان را بخواهید. برای هر پرسشی به ما ایمیل بزنید (پایین).</p>
+
+<h2>تغییرات این سیاست</h2>
+<p>اگر نحوهٔ برخورد برنامه با اطلاعات تغییر کند، این صفحه و تاریخ «آخرین به‌روزرسانی» را به‌روز می‌کنیم.</p>
+
+<h2>تماس</h2>
+<p>پرسش دربارهٔ این سیاست: <a class="ltr" href="mailto:espadna.support@gmail.com">espadna.support@gmail.com</a></p>
+</article>
+</main>
+</body>
+</html>

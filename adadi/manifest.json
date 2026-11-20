@@ -1,0 +1,35 @@
+{
+    "name": "Adadi — math crossword",
+    "short_name": "Adadi",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#1f4468",
+    "theme_color": "#2f5d8a",
+    "description": "Math crossword puzzles: place the numbers so every equation is true.",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "icons/Icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-maskable-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "icons/Icon-maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}
